@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UISceneTool/UIBuilder/style.uss?fileID=7433441132597879392&amp;guid=246ef50dfb7a89748bff8d45b7d4a4e1&amp;type=3#style" />
+    <ui:VisualElement name="Main" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; width: 120px; height: 180px; translate: 1398px 253px;">
+        <ui:VisualElement name="LeftPart" style="background-color: rgba(0, 0, 0, 0);">
+            <ui:Button display-tooltip-when-elided="true" name="ZoomPlus" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/plus_normal.png?fileID=21300000&amp;guid=e30a554be832e3643a24db8fa465ac7c&amp;type=3#plus_normal&apos;); width: 27px; height: 27px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-bottom: 5px; margin-right: 5px; margin-top: 10px;" />
+            <ui:Button display-tooltip-when-elided="true" name="Left" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/arrow_normal.png?fileID=21300000&amp;guid=b6b961733e890f347964176c03214dad&amp;type=3#arrow_normal&apos;); width: 32px; height: 32px; rotate: 270deg;" />
+            <ui:Button display-tooltip-when-elided="true" name="ZoomMinus" class="buttonDefault" style="width: 27px; height: 27px; background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/minus_normal.png?fileID=21300000&amp;guid=22362a8cf2d035840af5876426d7dd30&amp;type=3#minus_normal&apos;); margin-top: 5px; margin-right: 5px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="MIddlePart" style="background-color: rgba(0, 0, 0, 0);">
+            <ui:Button display-tooltip-when-elided="true" name="Up" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/arrow_normal.png?fileID=21300000&amp;guid=b6b961733e890f347964176c03214dad&amp;type=3#arrow_normal&apos;); width: 32px; height: 32px; margin-top: 10px;" />
+            <ui:Button display-tooltip-when-elided="true" name="Return" class="buttonDefault" style="width: 20px; height: 20px; background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/start_normal.png?fileID=21300000&amp;guid=29134c75e8264cd4eba11313daafb4b3&amp;type=3#start_normal&apos;); margin-left: 6px; margin-right: 6px; margin-top: 6px; margin-bottom: 6px;" />
+            <ui:Button display-tooltip-when-elided="true" name="Down" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/arrow_normal.png?fileID=21300000&amp;guid=b6b961733e890f347964176c03214dad&amp;type=3#arrow_normal&apos;); width: 32px; height: 32px; rotate: 180deg;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="RightPart" style="background-color: rgba(0, 0, 0, 0);">
+            <ui:Button display-tooltip-when-elided="true" name="Camera" class="buttonDefault" style="width: 32px; height: 32px; background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/camera_on_normal.png?fileID=21300000&amp;guid=4d1d4a701e4142c4095fcc72c30829f2&amp;type=3#camera_on_normal&apos;); margin-bottom: 10px; margin-right: 0; margin-left: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+            <ui:Button display-tooltip-when-elided="true" name="Right" class="buttonDefault" style="width: 32px; height: 32px; background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/arrow_normal.png?fileID=21300000&amp;guid=b6b961733e890f347964176c03214dad&amp;type=3#arrow_normal&apos;); rotate: 90deg;" />
+            <ui:Button display-tooltip-when-elided="true" name="Sound" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/sound_on_normal.png?fileID=21300000&amp;guid=05ba2811557baf444b3108dcd2723002&amp;type=3#sound_on_normal&apos;); width: 27px; height: 27px; margin-left: 4px; margin-top: 4px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
