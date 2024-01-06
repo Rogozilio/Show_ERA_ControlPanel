@@ -1,20 +1,56 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UISceneTool/UIBuilder/style.uss?fileID=7433441132597879392&amp;guid=246ef50dfb7a89748bff8d45b7d4a4e1&amp;type=3#style" />
+    <Style src="project://database/Assets/UISceneTool/UIBuilder/style.uss?fileID=7433441132597879392&amp;guid=f35902f5778c8744eb4b123b1576b072&amp;type=3#style" />
     <ui:VisualElement name="Main" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; width: 120px; height: 180px; translate: 1398px 253px;">
         <ui:VisualElement name="LeftPart" style="background-color: rgba(0, 0, 0, 0);">
-            <ui:Button display-tooltip-when-elided="true" name="ZoomPlus" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/plus_normal.png?fileID=21300000&amp;guid=e30a554be832e3643a24db8fa465ac7c&amp;type=3#plus_normal&apos;); width: 27px; height: 27px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-bottom: 5px; margin-right: 5px; margin-top: 10px;" />
-            <ui:Button display-tooltip-when-elided="true" name="Left" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/arrow_normal.png?fileID=21300000&amp;guid=b6b961733e890f347964176c03214dad&amp;type=3#arrow_normal&apos;); width: 32px; height: 32px; rotate: 270deg;" />
-            <ui:Button display-tooltip-when-elided="true" name="ZoomMinus" class="buttonDefault" style="width: 27px; height: 27px; background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/minus_normal.png?fileID=21300000&amp;guid=22362a8cf2d035840af5876426d7dd30&amp;type=3#minus_normal&apos;); margin-top: 5px; margin-right: 5px;" />
+            <ui:Button display-tooltip-when-elided="true" name="ZoomPlus" class="otherBackground" style="width: 26px; height: 26px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-bottom: 6px; margin-right: 6px; margin-top: 10px; rotate: 90deg;">
+                <ui:VisualElement name="ZoomPlusFrontground" class="otherFrontground" style="flex-grow: 1;">
+                    <ui:Label text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ZoomPlusText" class="otherText" style="rotate: 270deg; margin-bottom: 0; padding-top: 0; padding-bottom: 3px; padding-left: 1px;" />
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button display-tooltip-when-elided="true" name="Left" class="arrowBackground" style="rotate: 270deg;">
+                <ui:VisualElement name="LeftFrontground" class="arrowFrontground" style="flex-grow: 1;">
+                    <ui:Label text="➔" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LeftText" class="arrowText" />
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button display-tooltip-when-elided="true" name="ZoomMinus" class="otherBackground" style="width: 26px; height: 26px; margin-top: 6px;">
+                <ui:VisualElement name="ZoomMinusFrontground" class="otherFrontground" style="flex-grow: 1;">
+                    <ui:Label text="_" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ZoomMinusText" class="otherText" style="font-size: 27px; padding-bottom: 6px; -unity-text-align: lower-center;" />
+                </ui:VisualElement>
+            </ui:Button>
         </ui:VisualElement>
         <ui:VisualElement name="MIddlePart" style="background-color: rgba(0, 0, 0, 0);">
-            <ui:Button display-tooltip-when-elided="true" name="Up" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/arrow_normal.png?fileID=21300000&amp;guid=b6b961733e890f347964176c03214dad&amp;type=3#arrow_normal&apos;); width: 32px; height: 32px; margin-top: 10px;" />
-            <ui:Button display-tooltip-when-elided="true" name="Return" class="buttonDefault" style="width: 20px; height: 20px; background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/start_normal.png?fileID=21300000&amp;guid=29134c75e8264cd4eba11313daafb4b3&amp;type=3#start_normal&apos;); margin-left: 6px; margin-right: 6px; margin-top: 6px; margin-bottom: 6px;" />
-            <ui:Button display-tooltip-when-elided="true" name="Down" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/arrow_normal.png?fileID=21300000&amp;guid=b6b961733e890f347964176c03214dad&amp;type=3#arrow_normal&apos;); width: 32px; height: 32px; rotate: 180deg;" />
+            <ui:Button display-tooltip-when-elided="true" name="Up" class="arrowBackground" style="width: 32px; height: 32px; margin-top: 10px;">
+                <ui:VisualElement name="UpFrontground" class="arrowFrontground" style="flex-grow: 1;">
+                    <ui:Label text="➔" parse-escape-sequences="true" display-tooltip-when-elided="true" name="UpText" class="arrowText" />
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button display-tooltip-when-elided="true" name="Return" style="margin-top: 6px; margin-right: 6px; margin-bottom: 6px; margin-left: 6px;">
+                <ui:VisualElement name="ReturnFrontground" style="flex-grow: 1;">
+                    <ui:Label text="○" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReturnText" />
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button display-tooltip-when-elided="true" name="Down" class="arrowBackground" style="rotate: 180deg;">
+                <ui:VisualElement name="DownFrontground" class="arrowFrontground" style="flex-grow: 1;">
+                    <ui:Label text="➔" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DownText" class="arrowText" />
+                </ui:VisualElement>
+            </ui:Button>
         </ui:VisualElement>
         <ui:VisualElement name="RightPart" style="background-color: rgba(0, 0, 0, 0);">
-            <ui:Button display-tooltip-when-elided="true" name="Camera" class="buttonDefault" style="width: 32px; height: 32px; background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/camera_on_normal.png?fileID=21300000&amp;guid=4d1d4a701e4142c4095fcc72c30829f2&amp;type=3#camera_on_normal&apos;); margin-bottom: 10px; margin-right: 0; margin-left: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
-            <ui:Button display-tooltip-when-elided="true" name="Right" class="buttonDefault" style="width: 32px; height: 32px; background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/arrow_normal.png?fileID=21300000&amp;guid=b6b961733e890f347964176c03214dad&amp;type=3#arrow_normal&apos;); rotate: 90deg;" />
-            <ui:Button display-tooltip-when-elided="true" name="Sound" class="buttonDefault" style="background-image: url(&apos;project://database/Assets/UISceneTool/Sprites/sound_on_normal.png?fileID=21300000&amp;guid=05ba2811557baf444b3108dcd2723002&amp;type=3#sound_on_normal&apos;); width: 27px; height: 27px; margin-left: 4px; margin-top: 4px;" />
+            <ui:Button display-tooltip-when-elided="true" name="Camera" class="otherBackground" style="width: 32px; height: 32px; margin-bottom: 10px; margin-right: 0; margin-left: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; rotate: 180deg; -unity-background-image-tint-color: rgb(90, 162, 74);">
+                <ui:VisualElement name="CameraFrontground" class="otherFrontground" style="flex-grow: 1; -unity-background-image-tint-color: rgb(225, 227, 230);">
+                    <ui:VisualElement name="CameraIcon" />
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button display-tooltip-when-elided="true" name="Right" class="arrowBackground" style="rotate: 90deg;">
+                <ui:VisualElement name="RightFrontground" class="arrowFrontground" style="flex-grow: 1;">
+                    <ui:Label text="➔" parse-escape-sequences="true" display-tooltip-when-elided="true" name="RightText" class="arrowText" />
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button display-tooltip-when-elided="true" name="Sound" style="width: 27px; height: 27px;">
+                <ui:VisualElement name="SoundFrontground" style="flex-grow: 1;">
+                    <ui:VisualElement name="SoundIcon" />
+                </ui:VisualElement>
+            </ui:Button>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
