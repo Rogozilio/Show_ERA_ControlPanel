@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UISceneTool/UIBuilder/style.uss?fileID=7433441132597879392&amp;guid=f35902f5778c8744eb4b123b1576b072&amp;type=3#style" />
-    <ui:VisualElement name="Main" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; width: 120px; height: 180px; translate: 1398px 253px;">
-        <ui:VisualElement name="LeftPart" style="background-color: rgba(0, 0, 0, 0);">
-            <ui:Button display-tooltip-when-elided="true" name="ZoomPlus" class="otherBackground" style="width: 26px; height: 26px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-bottom: 6px; margin-right: 6px; margin-top: 10px; rotate: 90deg;">
+    <ui:VisualElement name="Window" style="height: auto; translate: 1397px 253px;">
+        <ui:VisualElement name="LeftPart" style="background-color: rgba(0, 0, 0, 0); flex-shrink: 0;">
+            <ui:Button display-tooltip-when-elided="true" name="ZoomPlus" class="otherBackground" style="width: 52px; height: 52px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-bottom: 12px; margin-right: 12px; margin-top: 20px; rotate: 90deg;">
                 <ui:VisualElement name="ZoomPlusFrontground" class="otherFrontground" style="flex-grow: 1;">
                     <ui:Label text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ZoomPlusText" class="otherText" style="rotate: 270deg; margin-bottom: 0; padding-top: 0; padding-bottom: 3px; padding-left: 1px;" />
                 </ui:VisualElement>
@@ -12,19 +12,19 @@
                     <ui:Label text="➔" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LeftText" class="arrowText" />
                 </ui:VisualElement>
             </ui:Button>
-            <ui:Button display-tooltip-when-elided="true" name="ZoomMinus" class="otherBackground" style="width: 26px; height: 26px; margin-top: 6px;">
+            <ui:Button display-tooltip-when-elided="true" name="ZoomMinus" class="otherBackground" style="width: 52px; height: 52px; margin-top: 12px;">
                 <ui:VisualElement name="ZoomMinusFrontground" class="otherFrontground" style="flex-grow: 1;">
-                    <ui:Label text="_" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ZoomMinusText" class="otherText" style="font-size: 27px; padding-bottom: 6px; -unity-text-align: lower-center;" />
+                    <ui:Label text="_" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ZoomMinusText" class="otherText" style="font-size: 46px; padding-bottom: 14px; -unity-text-align: lower-center;" />
                 </ui:VisualElement>
             </ui:Button>
         </ui:VisualElement>
-        <ui:VisualElement name="MIddlePart" style="background-color: rgba(0, 0, 0, 0);">
-            <ui:Button display-tooltip-when-elided="true" name="Up" class="arrowBackground" style="width: 32px; height: 32px; margin-top: 10px;">
+        <ui:VisualElement name="MIddlePart" style="background-color: rgba(0, 0, 0, 0); flex-shrink: 0;">
+            <ui:Button display-tooltip-when-elided="true" name="Up" class="arrowBackground" style="margin-top: 20px;">
                 <ui:VisualElement name="UpFrontground" class="arrowFrontground" style="flex-grow: 1;">
                     <ui:Label text="➔" parse-escape-sequences="true" display-tooltip-when-elided="true" name="UpText" class="arrowText" />
                 </ui:VisualElement>
             </ui:Button>
-            <ui:Button display-tooltip-when-elided="true" name="Return" style="margin-top: 6px; margin-right: 6px; margin-bottom: 6px; margin-left: 6px;">
+            <ui:Button display-tooltip-when-elided="true" name="Return">
                 <ui:VisualElement name="ReturnFrontground" style="flex-grow: 1;">
                     <ui:Label text="○" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReturnText" />
                 </ui:VisualElement>
@@ -35,10 +35,10 @@
                 </ui:VisualElement>
             </ui:Button>
         </ui:VisualElement>
-        <ui:VisualElement name="RightPart" style="background-color: rgba(0, 0, 0, 0);">
-            <ui:Button display-tooltip-when-elided="true" name="Camera" class="otherBackground" style="width: 32px; height: 32px; margin-bottom: 10px; margin-right: 0; margin-left: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; rotate: 180deg; -unity-background-image-tint-color: rgb(90, 162, 74);">
-                <ui:VisualElement name="CameraFrontground" class="otherFrontground" style="flex-grow: 1; -unity-background-image-tint-color: rgb(225, 227, 230);">
-                    <ui:VisualElement name="CameraIcon" />
+        <ui:VisualElement name="RightPart" style="background-color: rgba(0, 0, 0, 0); flex-shrink: 0;">
+            <ui:Button display-tooltip-when-elided="true" name="Camera" class="otherBackground Camera" style="rotate: 180deg;">
+                <ui:VisualElement name="CameraFrontground" class="otherFrontground CameraFrontground" style="flex-grow: 1;">
+                    <ui:VisualElement name="CameraIcon" class="CameraIcon" />
                 </ui:VisualElement>
             </ui:Button>
             <ui:Button display-tooltip-when-elided="true" name="Right" class="arrowBackground" style="rotate: 90deg;">
@@ -46,7 +46,7 @@
                     <ui:Label text="➔" parse-escape-sequences="true" display-tooltip-when-elided="true" name="RightText" class="arrowText" />
                 </ui:VisualElement>
             </ui:Button>
-            <ui:Button display-tooltip-when-elided="true" name="Sound" style="width: 27px; height: 27px;">
+            <ui:Button display-tooltip-when-elided="true" name="Sound" style="width: 54px; height: 54px;">
                 <ui:VisualElement name="SoundFrontground" style="flex-grow: 1;">
                     <ui:VisualElement name="SoundIcon" />
                 </ui:VisualElement>

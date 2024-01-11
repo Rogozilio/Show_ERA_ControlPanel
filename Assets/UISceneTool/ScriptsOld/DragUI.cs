@@ -141,7 +141,7 @@ namespace ERA
         {
             var minX = _getHalfSize.x - offsetLeft;
             var maxX = Screen.width - _getHalfSize.x - offsetRight;
-
+            
             return Mathf.Clamp(posX, minX, maxX);
         }
         
@@ -149,7 +149,6 @@ namespace ERA
         {
             var minY = _getHalfSize.y - offsetBottom;
             var maxY = Screen.height - _getHalfSize.y - offsetTop;
-            
             return Mathf.Clamp(posY, minY, maxY);
         }
 
