@@ -16,7 +16,7 @@
     padding-top: 0;
     padding-bottom: 0;
     background-color: rgba(0, 0, 0, 0);
-    background-image: url('project://database/Assets/UISceneTool/Sprites/Arrow_background.png?fileID=2800000&guid=4c7f7a3094422fe42bb7247c0abcc3f0&type=3#Arrow_background');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Arrow_background.png?fileID=21300000&guid=8f6e8d896702c6646852172fc00c4eb5&type=3#Arrow_background');
     width: 64px;
     height: 64px;
     -unity-background-image-tint-color: rgb(174, 204, 172);
@@ -40,7 +40,7 @@
     padding-top: 0;
     padding-bottom: 0;
     background-color: rgba(0, 0, 0, 0);
-    background-image: url('project://database/Assets/UISceneTool/Sprites/Arrow_background.png?fileID=2800000&guid=4c7f7a3094422fe42bb7247c0abcc3f0&type=3#Arrow_background');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Arrow_background.png?fileID=21300000&guid=8f6e8d896702c6646852172fc00c4eb5&type=3#Arrow_background');
     -unity-background-image-tint-color: rgb(82, 148, 89);
 }
 
@@ -56,7 +56,7 @@
     padding-bottom: 0;
     padding-left: 0;
     -unity-font-definition: initial;
-    -unity-font: url('project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=de8a9f2add43cf74a9f6a773e50765b8&type=3#NotInter-Regular');
+    -unity-font: url('project://database/Assets/UISceneTool/Font/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=6e8d8ec7497905548a506cafa5a621ba&type=3#NotInter-Regular');
     color: rgb(216, 230, 210);
     font-size: 44px;
     -unity-text-align: middle-center;
@@ -86,7 +86,7 @@
     padding-top: 0;
     padding-bottom: 0;
     background-color: rgba(0, 0, 0, 0);
-    background-image: url('project://database/Assets/UISceneTool/Sprites/Other_background.png?fileID=2800000&guid=66db8ed3982515f4fbc4f06fb075c17d&type=3#Other_background');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Other_background.png?fileID=21300000&guid=4faf5342f2844f64ca9f53bf195cf19f&type=3#Other_background');
     width: 64px;
     height: 64px;
     -unity-background-image-tint-color: rgb(174, 204, 172);
@@ -110,7 +110,7 @@
     padding-top: 0;
     padding-bottom: 0;
     background-color: rgba(0, 0, 0, 0);
-    background-image: url('project://database/Assets/UISceneTool/Sprites/Other_background.png?fileID=2800000&guid=66db8ed3982515f4fbc4f06fb075c17d&type=3#Other_background');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Other_background.png?fileID=21300000&guid=4faf5342f2844f64ca9f53bf195cf19f&type=3#Other_background');
     -unity-background-image-tint-color: rgb(83, 148, 89);
 }
 
@@ -119,7 +119,7 @@
     height: auto;
     -unity-text-align: middle-center;
     -unity-font-definition: initial;
-    -unity-font: url('project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=de8a9f2add43cf74a9f6a773e50765b8&type=3#NotInter-Regular');
+    -unity-font: url('project://database/Assets/UISceneTool/Font/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=6e8d8ec7497905548a506cafa5a621ba&type=3#NotInter-Regular');
     color: rgb(216, 230, 210);
     margin-top: 0;
     margin-right: 0;
@@ -154,7 +154,7 @@
     padding-top: 0;
     padding-bottom: 0;
     background-color: rgba(0, 0, 0, 0);
-    background-image: url('project://database/Assets/UISceneTool/Sprites/Center_background.png?fileID=2800000&guid=897a616c9e7558c4b9a987f5329878e5&type=3#Center_background');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Center_background.png?fileID=21300000&guid=e8c89acb9c07573459e8aac16a71ff9a&type=3#Center_background');
     width: 40px;
     height: 40px;
     -unity-background-image-tint-color: rgb(174, 204, 172);
@@ -178,7 +178,7 @@
     padding-top: 0;
     padding-bottom: 0;
     background-color: rgba(0, 0, 0, 0);
-    background-image: url('project://database/Assets/UISceneTool/Sprites/Center_background.png?fileID=2800000&guid=897a616c9e7558c4b9a987f5329878e5&type=3#Center_background');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Center_background.png?fileID=21300000&guid=e8c89acb9c07573459e8aac16a71ff9a&type=3#Center_background');
     -unity-background-image-tint-color: rgb(82, 146, 89);
 }
 
@@ -197,7 +197,7 @@
     border-bottom-width: 0;
     border-left-width: 0;
     -unity-font-definition: initial;
-    -unity-font: url('project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=de8a9f2add43cf74a9f6a773e50765b8&type=3#NotInter-Regular');
+    -unity-font: url('project://database/Assets/UISceneTool/Font/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=6e8d8ec7497905548a506cafa5a621ba&type=3#NotInter-Regular');
     -unity-font-style: bold;
     color: rgb(216, 230, 210);
     -unity-text-align: middle-center;
@@ -206,16 +206,16 @@
 #Sound {
     width: 26px;
     height: 26px;
-    background-image: url('project://database/Assets/UISceneTool/Sprites/circle_background.png?fileID=21300000&guid=94588440120605142a5cf0ab73610d5f&type=3#circle_background');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/circle_background.png?fileID=21300000&guid=098b7bc4d90a7b845ac338118c729e83&type=3#circle_background');
     background-color: rgba(0, 0, 0, 0);
     border-top-width: 0;
     border-right-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
-    padding-top: 5px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
     margin-top: 5px;
     margin-right: 0;
     margin-bottom: 0;
@@ -225,7 +225,7 @@
 #SoundFrontground {
     width: auto;
     height: auto;
-    background-image: url('project://database/Assets/UISceneTool/Sprites/circle_background.png?fileID=21300000&guid=94588440120605142a5cf0ab73610d5f&type=3#circle_background');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/circle_background.png?fileID=21300000&guid=098b7bc4d90a7b845ac338118c729e83&type=3#circle_background');
     background-color: rgba(0, 0, 0, 0);
     border-top-width: 0;
     border-right-width: 0;
@@ -242,7 +242,7 @@
 }
 
 #SoundIcon {
-    background-image: url('project://database/Assets/UISceneTool/Sprites/Sound.png?fileID=21300000&guid=ee5f5dfea124fc74e83ff3d09d32f8b4&type=3#Sound');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Sound.png?fileID=21300000&guid=f8a8684aa79dd0945b201149989df863&type=3#Sound');
     background-color: rgba(0, 0, 0, 0);
     border-top-width: 0;
     border-right-width: 0;
@@ -285,7 +285,7 @@
     padding-bottom: 0;
     padding-left: 0;
     background-color: rgba(0, 0, 0, 0);
-    background-image: url('project://database/Assets/UISceneTool/Sprites/Camera.png?fileID=21300000&guid=2721ece376e7fce4c854e08a5105abcb&type=3#Camera');
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Camera.png?fileID=21300000&guid=7f02a17f2ad2aa4469ba0bca62c8b519&type=3#Camera');
     rotate: 180deg;
     -unity-background-image-tint-color: rgb(93, 165, 77);
     border-top-width: 0;
@@ -313,10 +313,6 @@
 
 .arrowFrontground:hover {
     -unity-background-image-tint-color: rgb(91, 163, 75);
-}
-
-.arrowFrontground:focus {
-    -unity-background-image-tint-color: rgb(245, 23, 3);
 }
 
 .otherFrontground:hover {
@@ -349,4 +345,83 @@
 
 #Window.WindowShow {
     -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.Scene {
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Center_background.png?fileID=21300000&guid=e8c89acb9c07573459e8aac16a71ff9a&type=3#Center_background');
+    width: 52px;
+    height: 52px;
+    background-color: rgba(0, 0, 0, 0);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+.SceneFrontground {
+    background-image: url('project://database/Assets/UISceneTool/Sprites/Center_background.png?fileID=21300000&guid=e8c89acb9c07573459e8aac16a71ff9a&type=3#Center_background');
+    width: auto;
+    height: auto;
+    -unity-background-image-tint-color: rgb(83, 148, 89);
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    flex-grow: 1;
+}
+
+.SceneText {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 1px;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    flex-grow: 1;
+    -unity-text-align: upper-center;
+    color: rgb(255, 255, 255);
+    -unity-font: url('project://database/Assets/UISceneTool/Font/ofont.ru_Open%20Sans.ttf?fileID=12800000&guid=566d207f57874874d9aaaa334811e7c1&type=3#ofont.ru_Open Sans');
+    -unity-font-definition: initial;
+    font-size: 32px;
+}
+
+.SceneFrontground:hover {
+    -unity-background-image-tint-color: rgb(91, 163, 75);
+}
+
+.SceneRow {
+    width: 192px;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.sceneFrontgroundSelected {
+    -unity-background-image-tint-color: rgb(199, 199, 199);
+}
+
+.SceneTextSelected {
+    color: rgb(51, 102, 0);
 }
