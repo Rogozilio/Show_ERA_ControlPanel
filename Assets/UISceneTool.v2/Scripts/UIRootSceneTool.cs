@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UISceneTool.Scripts;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 public class UIRootSceneTool
@@ -18,16 +20,6 @@ public class UIRootSceneTool
             Frontground = Background.Children().First();
             Icon = Frontground.Children().First();
         }
-
-        public void OnPointerDown(Action<PointerDownEvent> action)
-        {
-            Background.RegisterCallback<PointerDownEvent>(evt => { action?.Invoke(evt); }, TrickleDown.TrickleDown);
-        }
-
-        public void OnPointerUp(Action<PointerUpEvent> action)
-        {
-            Background.RegisterCallback<PointerUpEvent>(evt => { action?.Invoke(evt); });
-        }
     }
 
     private readonly VisualElement _root;
@@ -42,6 +34,7 @@ public class UIRootSceneTool
     private UIButtonSceneTool _right;
     private UIButtonSceneTool _return;
     private UIButtonSceneTool _sound;
+    private VisualElement _scenes;
 
     private Vector3 _offsetOriginDrag;
 
@@ -76,6 +69,7 @@ public class UIRootSceneTool
         _right = new UIButtonSceneTool(_root.Q<Button>("Right"));
         _return = new UIButtonSceneTool(_root.Q<Button>("Return"));
         _sound = new UIButtonSceneTool(_root.Q<Button>("Sound"));
+        _scenes = _root.Q<VisualElement>("Scenes");
 
         _zoomPlus.Background.AddManipulator(new ResizeButtonManipulator());
         _zoomMinus.Background.AddManipulator(new ResizeButtonManipulator());
@@ -110,6 +104,7 @@ public class UIRootSceneTool
         _right.Background.visible = value;
         _return.Background.visible = value;
         _sound.Background.visible = value;
+        _scenes.visible = value;
     }
 
     public void OnClickCamera(Action action)
@@ -120,5 +115,85 @@ public class UIRootSceneTool
     public void OnCameraDrag(Action<PointerMoveEvent> action)
     {
         _camera.Background.RegisterCallback<PointerMoveEvent>(evt => { action?.Invoke(evt); });
+    }
+
+    public void AddScenes(List<UnityEvent> scenesAction)
+    {
+        var scenes = _root.Q<VisualElement>("Scenes");
+        var sceneRow = new VisualElement();
+        for (var i = 0; i < scenesAction.Count; i++)
+        {
+            if (i % 3 == 0) sceneRow = AddRowScene(scenes, (byte)(i / 3));
+            AddScene(sceneRow, (byte)(i + 1), scenesAction[i]);
+        }
+        
+        ChangeLeftPaddingFirstRow();
+        
+        if (scenesAction.Count > 0)
+            SelectScene(_root.Q<Button>("Scene1"));
+    }
+
+    private VisualElement AddRowScene(VisualElement scenes, byte numberRow)
+    {
+        var scenesRow = new VisualElement();
+        scenesRow.AddToClassList("SceneRow");
+        scenesRow.name = "SceneRow" + numberRow;
+        if (numberRow == 0)
+        {
+            var o = scenesRow.style.paddingLeft;
+            o.value = 100f;
+            scenesRow.style.paddingLeft = o;
+        }
+        scenes.Add(scenesRow);
+        return scenesRow;
+    }
+
+    private void AddScene(VisualElement scenesRow, byte index, UnityEvent action)
+    {
+        var scene = new Button();
+        scene.AddToClassList("Scene");
+        scene.name = "Scene" + index;
+        scene.AddManipulator(new EventClickManipulation(() =>
+        {
+            UnSelectScenes();
+            SelectScene(scene);
+        }, action));
+
+        var sceneFrontground = new VisualElement();
+        sceneFrontground.AddToClassList("SceneFrontground");
+        sceneFrontground.name = "SceneFrontground" + index;
+
+        var sceneText = new Label();
+        sceneText.AddToClassList("SceneText");
+        sceneText.text = index.ToString();
+        sceneText.name = "SceneText" + sceneText.text;
+
+        sceneFrontground.Add(sceneText);
+        scene.Add(sceneFrontground);
+        scenesRow.Add(scene);
+    }
+
+    private void ChangeLeftPaddingFirstRow()
+    {
+        var sceneRow = _root.Q<VisualElement>(null,"SceneRow");
+        var newPaddingLeft = sceneRow.style.paddingLeft;
+        newPaddingLeft.value = (192 - sceneRow.childCount * 52 - (18 * (sceneRow.childCount - 1))) / 2f;
+        sceneRow.style.paddingLeft = newPaddingLeft;
+    }
+
+    private void UnSelectScenes()
+    {
+        var scene = _root.Q<Button>(null, "SceneSelected");
+
+        scene.RemoveFromClassList("SceneSelected");
+        scene.Children().First().RemoveFromClassList("SceneFrontgroundSelected");
+        scene.Children().First().Children().First().RemoveFromClassList("SceneTextSelected");
+    }
+
+    private void SelectScene(VisualElement scene)
+    {
+        scene.AddToClassList("SceneSelected");
+        scene.Children().First().AddToClassList("SceneFrontgroundSelected");
+        scene.Children().First().Children().First().AddToClassList("SceneTextSelected");
     }
 }

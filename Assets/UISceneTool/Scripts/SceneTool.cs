@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using ERA;
@@ -6,32 +6,120 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Events;
-using Zenject;
 
-public class SceneTool : MonoBehaviour
+namespace ERA
 {
-    [Serializable]
-    public struct SceneToolEvents
+    public class SceneTool : MonoBehaviour
     {
-        public UnityEvent holdZoomPlus;
-        public UnityEvent holdZoomMinus;
-        public UnityEvent holdUp;
-        public UnityEvent holdDown;
-        public UnityEvent holdLeft;
-        public UnityEvent holdRight;
-        public UnityEvent clickCamera;
-        public UnityEvent clickReturn;
-        public UnityEvent clickSound;
-        public List<UnityEvent> clickScene;
-    }
+        public RectTransform window;
+        public ButtonClickSceneTool buttonCamera;
+        public ButtonHoldSceneTool buttonUp;
+        public ButtonHoldSceneTool buttonDown;
+        public ButtonHoldSceneTool buttonLeft;
+        public ButtonHoldSceneTool buttonRight;
+        public ButtonClickSceneTool buttonStartReturn;
+        public ButtonHoldSceneTool buttonMinus;
+        public ButtonHoldSceneTool buttonPlus;
+        public ButtonClickSceneTool buttonSound;
+        public GameObject scenes;
+        public DragUI dragUI;
+        public ChangeVolumeSound changeVolumeSound;
+        public TooltipSceneTool tooltip;
 
-    [Inject] private UIRootSceneTool _uiRoot;
+        private ButtonClickSceneTool[] _buttonsScene;
+        
+        private void Start()
+        {
+            if (scenes.transform.childCount > 1)
+            {
+                ActivateButtonScene(scenes.transform.GetChild(0).GetComponent<ButtonClickSceneTool>());
+            }
 
-    [SerializeField] private SceneToolEvents _sceneToolEvents;
+            buttonCamera.AddOnShowTooltip = ShowTooltip;
+            buttonUp.AddOnShowTooltip = ShowTooltip;
+            buttonDown.AddOnShowTooltip = ShowTooltip;
+            buttonLeft.AddOnShowTooltip = ShowTooltip;
+            buttonRight.AddOnShowTooltip = ShowTooltip;
+            buttonStartReturn.AddOnShowTooltip = ShowTooltip;
+            buttonMinus.AddOnShowTooltip = ShowTooltip;
+            buttonPlus.AddOnShowTooltip = ShowTooltip;
+            buttonSound.AddOnShowTooltip = ShowTooltip;
 
-    private void Awake()
-    {
+            buttonCamera.AddOnHideTooltip = HideTooltip;
+            buttonUp.AddOnHideTooltip = HideTooltip;
+            buttonDown.AddOnHideTooltip = HideTooltip;
+            buttonLeft.AddOnHideTooltip = HideTooltip;
+            buttonRight.AddOnHideTooltip = HideTooltip;
+            buttonStartReturn.AddOnHideTooltip = HideTooltip;
+            buttonMinus.AddOnHideTooltip = HideTooltip;
+            buttonPlus.AddOnHideTooltip = HideTooltip;
+            buttonSound.AddOnHideTooltip = HideTooltip;
+
+            if (!scenes.activeSelf) return;
+            _buttonsScene = new ButtonClickSceneTool[scenes.transform.childCount];
+
+            for (var i = 0; i < scenes.transform.childCount; i++)
+            {
+                _buttonsScene[i] = scenes.transform.GetChild(i).GetComponent<ButtonClickSceneTool>();
+                _buttonsScene[i].AddOnShowTooltip = ShowTooltip;
+                _buttonsScene[i].AddOnHideTooltip = HideTooltip;
+            }
+        }
+
+        private void ShowTooltip(string text)
+        {
+            tooltip.Show(text);
+        }
+
+        private void HideTooltip()
+        {
+            tooltip.Hide();
+        }
+
+        public void SwitchPanel()
+        {
+            buttonUp.gameObject.SetActive(!buttonUp.gameObject.activeSelf);
+            buttonDown.gameObject.SetActive(!buttonDown.gameObject.activeSelf);
+            buttonLeft.gameObject.SetActive(!buttonLeft.gameObject.activeSelf);
+            buttonRight.gameObject.SetActive(!buttonRight.gameObject.activeSelf);
+            buttonStartReturn.gameObject.SetActive(!buttonStartReturn.gameObject.activeSelf);
+            buttonMinus.gameObject.SetActive(!buttonMinus.gameObject.activeSelf);
+            buttonPlus.gameObject.SetActive(!buttonPlus.gameObject.activeSelf);
+            buttonSound.gameObject.SetActive(!buttonSound.gameObject.activeSelf);
+            if (scenes.transform.childCount > 1)
+                scenes.SetActive(!scenes.activeSelf);
+        }
+
+        public void DeactivateAllButtonScene()
+        {
+            foreach (Transform button in scenes.transform)
+            {
+                button.GetComponent<ButtonClickSceneTool>().IsSelect = false;
+            }
+        }
+
+        public void ActivateButtonScene(ButtonClickSceneTool clickButton)
+        {
+            clickButton.IsSelect = true;
+        }
+
+        private void Update()
+        {
+            buttonCamera.UseEventButton();
+            buttonUp.UseEventButton();
+            buttonDown.UseEventButton();
+            buttonLeft.UseEventButton();
+            buttonRight.UseEventButton();
+            buttonStartReturn.UseEventButton();
+            buttonMinus.UseEventButton();
+            buttonPlus.UseEventButton();
+            buttonSound.UseEventButton();
+            if(_buttonsScene == null) return;
+            foreach (var buttonScene in _buttonsScene)
+            {
+                buttonScene.UseEventButton();
+            }
+        }
     }
 }
 
@@ -39,7 +127,17 @@ public class SceneTool : MonoBehaviour
 [CustomEditor(typeof(SceneTool))]
 public class SceneToolEditor : Editor
 {
-    private SerializedProperty _sceneToolEvents;
+    private SerializedProperty _window;
+    private SerializedProperty _buttonCamera;
+    private SerializedProperty _buttonUp;
+    private SerializedProperty _buttonDown;
+    private SerializedProperty _buttonLeft;
+    private SerializedProperty _buttonRight;
+    private SerializedProperty _buttonStartReturn;
+    private SerializedProperty _buttonMinus;
+    private SerializedProperty _buttonPlus;
+    private SerializedProperty _buttonSound;
+    private SerializedProperty _scenesParent;
     private List<SerializedObject> _scenes;
     private SerializedProperty _dragUI;
     private SerializedProperty _changeVolumeSound;
@@ -73,7 +171,17 @@ public class SceneToolEditor : Editor
 
     private void OnEnable()
     {
-        _sceneToolEvents = serializedObject.FindProperty("_sceneToolEvents");
+        _window = serializedObject.FindProperty("window");
+        _buttonCamera = serializedObject.FindProperty("buttonCamera");
+        _buttonUp = serializedObject.FindProperty("buttonUp");
+        _buttonDown = serializedObject.FindProperty("buttonDown");
+        _buttonLeft = serializedObject.FindProperty("buttonLeft");
+        _buttonRight = serializedObject.FindProperty("buttonRight");
+        _buttonStartReturn = serializedObject.FindProperty("buttonStartReturn");
+        _buttonMinus = serializedObject.FindProperty("buttonMinus");
+        _buttonPlus = serializedObject.FindProperty("buttonPlus");
+        _buttonSound = serializedObject.FindProperty("buttonSound");
+        _scenesParent = serializedObject.FindProperty("scenes");
         _dragUI = serializedObject.FindProperty("dragUI");
         _changeVolumeSound = serializedObject.FindProperty("changeVolumeSound");
 
@@ -107,12 +215,13 @@ public class SceneToolEditor : Editor
 
         _activeButton = ButtonSceneToolType.None;
 
+        var scenes = (GameObject)_scenesParent.objectReferenceValue;
         _scenes ??= new List<SerializedObject>();
         _scenes.Clear();
-        // for (var i = 0; i < scenes.transform.childCount; i++)
-        // {
-        //     _scenes.Add(new SerializedObject(scenes.transform.GetChild(i).GetComponent<ButtonClickSceneTool>()));
-        // }
+        for (var i = 0; i < scenes.transform.childCount; i++)
+        {
+            _scenes.Add(new SerializedObject(scenes.transform.GetChild(i).GetComponent<ButtonClickSceneTool>()));
+        }
     }
 
     public override void OnInspectorGUI()
@@ -184,71 +293,111 @@ public class SceneToolEditor : Editor
         switch (_activeButton)
         {
             case ButtonSceneToolType.Camera:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("clickCamera"));
+                OptionButton(_buttonCamera, true);
                 DrawOptionsObstacles(_dragUI);
                 break;
             case ButtonSceneToolType.Up:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("holdUp"));
+                OptionButton(_buttonUp, false);
                 break;
             case ButtonSceneToolType.Down:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("holdDown"));
+                OptionButton(_buttonDown, false);
                 break;
             case ButtonSceneToolType.Left:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("holdLeft"));
+                OptionButton(_buttonLeft, false);
                 break;
             case ButtonSceneToolType.Right:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("holdRight"));
+                OptionButton(_buttonRight, false);
                 break;
             case ButtonSceneToolType.StartReturn:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("clickReturn"));
+                OptionButton(_buttonStartReturn, true);
                 break;
             case ButtonSceneToolType.Minus:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("holdZoomMinus"));
+                OptionButton(_buttonMinus, false);
                 break;
             case ButtonSceneToolType.Plus:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("holdZoomPlus"));
+                OptionButton(_buttonPlus, false);
                 break;
             case ButtonSceneToolType.Sound:
-                OptionButton(_sceneToolEvents.FindPropertyRelative("clickSound"));
+                OptionButton(_buttonSound, true);
                 DrawOptionAudioMixer(_changeVolumeSound);
                 break;
             case ButtonSceneToolType.Scenes:
-                OptionsScenes(_sceneToolEvents.FindPropertyRelative("clickScene"));
+                OptionsScenes();
                 break;
         }
     }
 
-    private void OptionButton(SerializedProperty btnEvent)
+    private void OptionButton(SerializedProperty button, bool isClickButton)
     {
-        EditorGUILayout.PropertyField(btnEvent);
+        EditorGUILayout.PropertyField(button);
         EditorGUILayout.Space();
-
-        EditorGUILayout.Space();
-        //ShowConditionDisabled(button);
-    }
-
-    private void OptionsScenes(SerializedProperty listScene)
-    {
-        for (var i = 0; i < listScene.arraySize; i++)
+        if (!button.objectReferenceValue)
         {
-            EditorGUILayout.PropertyField(listScene.GetArrayElementAtIndex(i));
+            EditorGUILayout.HelpBox(
+                button.name + " no assigned. Please, move object " + button.name.Split("button")[1] +
+                " to field above.",
+                MessageType.Warning);
+            return;
         }
 
+        var objectRef = new SerializedObject(button.objectReferenceValue);
+        EditorGUILayout.PropertyField(objectRef.FindProperty(isClickButton ? "onClick" : "onHold"));
+        EditorGUILayout.Space();
+        ShowConditionDisabled(button);
+        objectRef.ApplyModifiedProperties();
+    }
+
+    private void OptionsScenes()
+    {
+        EditorGUILayout.PropertyField(_scenesParent);
+        EditorGUILayout.Space();
+        var scenes = (GameObject)_scenesParent.objectReferenceValue;
+        
+        if(!scenes) return;
+
+        //Show Events
+        if (_scenes.Count > 1)
+            for (var i = 0; i < scenes.transform.childCount; i++)
+            {
+                EditorGUILayout.PropertyField(_scenes[i].FindProperty("onClick"));
+                _scenes[i].ApplyModifiedProperties();
+            }
+
         EditorGUILayout.BeginHorizontal();
-        GUI.enabled = listScene.arraySize > 0;
+        GUI.enabled = _scenes.Count > 1;
         if (GUILayout.Button("Remove Scene"))
         {
-            listScene.arraySize--;
+            var indexLastChild = scenes.transform.childCount - 1;
+            DestroyImmediate(scenes.transform.GetChild(indexLastChild).gameObject);
+            _scenes.RemoveAt(indexLastChild);
+            ChangeSizeWindow(_scenes.Count);
+            scenes.SetActive(_scenes.Count > 1);
         }
 
         GUI.enabled = true;
 
         if (GUILayout.Button("Add Scene"))
         {
-            listScene.arraySize++;
+            var child = Instantiate(scenes.transform.GetChild(0).gameObject, scenes.transform.GetChild(0).position,
+                scenes.transform.GetChild(0).rotation, scenes.transform);
+            var numberScene = scenes.transform.childCount;
+            child.name = "Scene " + numberScene;
+            child.GetComponentInChildren<TextMeshProUGUI>().text = numberScene.ToString();
+            var buttonScene = child.GetComponent<ButtonClickSceneTool>();
+            //buttonScene.keyboardButton = KeyCode.Alpha0 + numberScene;
+            _scenes.Add(new SerializedObject(buttonScene));
+            ChangeSizeWindow(_scenes.Count);
+            scenes.SetActive(_scenes.Count > 1);
         }
 
         EditorGUILayout.EndHorizontal();
+    }
+
+    private void ChangeSizeWindow(int countScenes)
+    {
+        var multiply = countScenes != 1 ? Mathf.FloorToInt((countScenes - 1) / 3f) : -1;
+        var rectTransform = (RectTransform)_window.objectReferenceValue;
+        rectTransform.offsetMin = new Vector2(rectTransform.offsetMin.x, -32f * multiply);
     }
 
     private void DrawOptionsObstacles(SerializedProperty buttonMove)
@@ -293,71 +442,71 @@ public class SceneToolEditor : Editor
         EditorGUILayout.EndHorizontal();
         objectRef.ApplyModifiedProperties();
     }
-
+    
     private void DrawOptionAudioMixer(SerializedProperty changeVolumeSound)
-    {
-        EditorGUILayout.Space();
-        EditorGUILayout.PropertyField(changeVolumeSound);
-
-        if (!changeVolumeSound.objectReferenceValue)
-        {
-            EditorGUILayout.HelpBox(
-                changeVolumeSound.name +
-                " no assigned. Please, move object with component ChangeVolumeSound to field above.",
-                MessageType.Warning);
-            return;
-        }
-
-        var objectRef = new SerializedObject(changeVolumeSound.objectReferenceValue);
-        var propertyAudioMixerMaster = objectRef.FindProperty("audioMixerMaster");
-        EditorGUILayout.PropertyField(propertyAudioMixerMaster);
-        var propertyMaskMixer = objectRef.FindProperty("maskMixer");
-
-        if (!propertyAudioMixerMaster.objectReferenceValue)
-        {
-            propertyMaskMixer.intValue = 1;
-            EditorGUILayout.HelpBox(
-                propertyAudioMixerMaster.name + " no assigned. Please, move audio mixer master to field above.",
-                MessageType.Warning);
-            objectRef.ApplyModifiedProperties();
-            return;
-        }
-
-        var propertyNameMixers = objectRef.FindProperty("nameMixers");
-        propertyNameMixers.arraySize = 0;
-
-        objectRef.FindProperty("audioMixerMaster").FindPropertyRelative("audioMixer");
-        var audioMixerObj = objectRef.FindProperty("audioMixerMaster").objectReferenceValue as AudioMixerGroup;
-        foreach (var mixer in audioMixerObj.audioMixer.FindMatchingGroups(""))
-        {
-            propertyNameMixers.arraySize++;
-            propertyNameMixers.GetArrayElementAtIndex(propertyNameMixers.arraySize - 1).stringValue = mixer.name;
-        }
-
-        var namesMixers = new string[propertyNameMixers.arraySize];
-        for (var i = 0; i < namesMixers.Length; i++)
-        {
-            namesMixers[i] = propertyNameMixers.GetArrayElementAtIndex(i).stringValue;
-        }
-
-        propertyMaskMixer.intValue =
-            EditorGUILayout.MaskField("Audio Mixer", propertyMaskMixer.intValue, namesMixers);
-        var indexes = new List<int>();
-        for (var i = 0; i < propertyNameMixers.arraySize; i++)
-        {
-            if (((1 << i) & propertyMaskMixer.intValue) != 0) indexes.Add(i);
-        }
-
-        var propertyIndexesMixer = objectRef.FindProperty("indexesMixer");
-        propertyIndexesMixer.arraySize = indexes.Count;
-
-        for (var i = 0; i < indexes.Count; i++)
-        {
-            propertyIndexesMixer.GetArrayElementAtIndex(i).intValue = indexes[i];
-        }
-
-        objectRef.ApplyModifiedProperties();
-    }
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.PropertyField(changeVolumeSound);
+    
+                if (!changeVolumeSound.objectReferenceValue)
+                {
+                    EditorGUILayout.HelpBox(
+                        changeVolumeSound.name +
+                        " no assigned. Please, move object with component ChangeVolumeSound to field above.",
+                        MessageType.Warning);
+                    return;
+                }
+    
+                var objectRef = new SerializedObject(changeVolumeSound.objectReferenceValue);
+                var propertyAudioMixerMaster = objectRef.FindProperty("audioMixerMaster");
+                EditorGUILayout.PropertyField(propertyAudioMixerMaster);
+                var propertyMaskMixer = objectRef.FindProperty("maskMixer");
+    
+                if (!propertyAudioMixerMaster.objectReferenceValue)
+                {
+                    propertyMaskMixer.intValue = 1;
+                    EditorGUILayout.HelpBox(
+                        propertyAudioMixerMaster.name + " no assigned. Please, move audio mixer master to field above.",
+                        MessageType.Warning);
+                    objectRef.ApplyModifiedProperties();
+                    return;
+                }
+    
+                var propertyNameMixers = objectRef.FindProperty("nameMixers");
+                propertyNameMixers.arraySize = 0;
+    
+                objectRef.FindProperty("audioMixerMaster").FindPropertyRelative("audioMixer");
+                var audioMixerObj = objectRef.FindProperty("audioMixerMaster").objectReferenceValue as AudioMixerGroup;
+                foreach (var mixer in audioMixerObj.audioMixer.FindMatchingGroups(""))
+                {
+                    propertyNameMixers.arraySize++;
+                    propertyNameMixers.GetArrayElementAtIndex(propertyNameMixers.arraySize - 1).stringValue = mixer.name;
+                }
+    
+                var namesMixers = new string[propertyNameMixers.arraySize];
+                for (var i = 0; i < namesMixers.Length; i++)
+                {
+                    namesMixers[i] = propertyNameMixers.GetArrayElementAtIndex(i).stringValue;
+                }
+    
+                propertyMaskMixer.intValue =
+                    EditorGUILayout.MaskField("Audio Mixer", propertyMaskMixer.intValue, namesMixers);
+                var indexes = new List<int>();
+                for (var i = 0; i < propertyNameMixers.arraySize; i++)
+                {
+                    if (((1 << i) & propertyMaskMixer.intValue) != 0) indexes.Add(i);
+                }
+    
+                var propertyIndexesMixer = objectRef.FindProperty("indexesMixer");
+                propertyIndexesMixer.arraySize = indexes.Count;
+    
+                for (var i = 0; i < indexes.Count; i++)
+                {
+                    propertyIndexesMixer.GetArrayElementAtIndex(i).intValue = indexes[i];
+                }
+    
+                objectRef.ApplyModifiedProperties();
+            }
 
     private void ShowConditionDisabled(SerializedProperty button)
     {

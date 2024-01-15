@@ -30,7 +30,7 @@ RectTransform:
   m_Children:
   - {fileID: 6300865050086167315}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 1238181131963925406}
   - component: {fileID: 621098643848849931}
   - component: {fileID: 3601231539043856477}
-  - component: {fileID: 4489046930084130442}
+  - component: {fileID: 9186353505335938362}
   m_Layer: 5
   m_Name: Scene 1
   m_TagString: Untagged
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4489046930084130442
+--- !u!114 &9186353505335938362
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,15 +124,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1676192125395452496}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e3dd0a740277a4085637d7a029f98d, type: 3}
+  m_Script: {fileID: 11500000, guid: 54a3e7e0a9c083f42b7f98f11c40b8d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   keyboardButton: 0
-  type: 0
+  type: 9
   normal: {fileID: 21300000, guid: 7b8624816402f4a4f91bae8fe09b8455, type: 3}
   hover: {fileID: 21300000, guid: 2e033de6ef950ad418ab33a6db7ac8de, type: 3}
   push: {fileID: 21300000, guid: 2a05bdcb351742a43af53692170fff66, type: 3}
-  tooltip: 
+  tooltip: 1
   disabled: {fileID: 0}
   isDisabled: 0
   disabledConditions: []
@@ -144,7 +144,31 @@ MonoBehaviour:
   selected: {fileID: 21300000, guid: b5596dafb7c78594a8f428239b4545ab, type: 3}
   onClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5991422403939262662}
+        m_TargetAssemblyTypeName: SceneTool, Assembly-CSharp
+        m_MethodName: DeactivateAllButtonScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5991422403939262662}
+        m_TargetAssemblyTypeName: SceneTool, Assembly-CSharp
+        m_MethodName: ActivateButtonScene
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 9186353505335938362}
+          m_ObjectArgumentAssemblyTypeName: ButtonClickSceneTool, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2258623123201014178
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,8 +315,8 @@ GameObject:
   - component: {fileID: 2461218393560760091}
   - component: {fileID: 7223679532176363587}
   - component: {fileID: 5035707368034146462}
+  - component: {fileID: 457784487297932477}
   - component: {fileID: 5661546601038072265}
-  - component: {fileID: 4243172933476078028}
   m_Layer: 5
   m_Name: Tooltip
   m_TagString: Untagged
@@ -359,6 +383,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &457784487297932477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2562733529698553434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07cc044a02b98f47b37f9eac5c680e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  padding: {x: 8, y: 6}
 --- !u!225 &5661546601038072265
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -371,19 +408,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &4243172933476078028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2562733529698553434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e41d6e92784272a40b37fd09724ae925, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  padding: {x: 0, y: 0}
 --- !u!1 &2643255889137334337
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +419,7 @@ GameObject:
   - component: {fileID: 8640615790628675952}
   - component: {fileID: 5236487899527866404}
   - component: {fileID: 1998601741738590615}
-  - component: {fileID: 5350915931630921563}
+  - component: {fileID: 8791230778592084732}
   m_Layer: 5
   m_Name: StartReturn
   m_TagString: Untagged
@@ -461,7 +485,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5350915931630921563
+--- !u!114 &8791230778592084732
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -470,23 +494,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 2643255889137334337}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e3dd0a740277a4085637d7a029f98d, type: 3}
+  m_Script: {fileID: 11500000, guid: 54a3e7e0a9c083f42b7f98f11c40b8d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardButton: 0
-  type: 0
+  keyboardButton: 27
+  type: 8
   normal: {fileID: 21300000, guid: 29134c75e8264cd4eba11313daafb4b3, type: 3}
   hover: {fileID: 21300000, guid: 0d6980c20181eed4ca2f4742b7639dac, type: 3}
   push: {fileID: 21300000, guid: d5be8bcd381bda44f9b6140dbece0928, type: 3}
-  tooltip: 
-  disabled: {fileID: 0}
+  tooltip: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043C\u0430\u0441\u0448\u0442\u0430\u0431
+    (Esc)"
+  disabled: {fileID: 21300000, guid: da5b0c36938d23443b6b703b42201a64, type: 3}
   isDisabled: 0
   disabledConditions: []
   clickType: 0
   clickButtonState: 0
-  normalOff: {fileID: 0}
-  hoverOff: {fileID: 0}
-  pushOff: {fileID: 0}
+  normalOff: {fileID: 21300000, guid: 29134c75e8264cd4eba11313daafb4b3, type: 3}
+  hoverOff: {fileID: 21300000, guid: 0d6980c20181eed4ca2f4742b7639dac, type: 3}
+  pushOff: {fileID: 21300000, guid: d5be8bcd381bda44f9b6140dbece0928, type: 3}
   selected: {fileID: 0}
   onClick:
     m_PersistentCalls:
@@ -502,8 +527,8 @@ GameObject:
   - component: {fileID: 5095539242842620844}
   - component: {fileID: 3348333161501626137}
   - component: {fileID: 1778427938014955533}
-  - component: {fileID: 5273451566463329410}
-  - component: {fileID: 6229799672984302410}
+  - component: {fileID: 3662398093053426270}
+  - component: {fileID: 9121440804113743006}
   m_Layer: 5
   m_Name: Camera
   m_TagString: Untagged
@@ -569,7 +594,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5273451566463329410
+--- !u!114 &3662398093053426270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -578,52 +603,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 3079897450835693405}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c3b63570e2838e428fcee029826dc4e, type: 3}
+  m_Script: {fileID: 11500000, guid: 54a3e7e0a9c083f42b7f98f11c40b8d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveRect: 0
-  moveRectTransform: {fileID: 0}
-  obstacles: []
-  onBeginDrag:
-    m_PersistentCalls:
-      m_Calls: []
-  onDrag:
-    m_PersistentCalls:
-      m_Calls: []
-  onEndDrag:
-    m_PersistentCalls:
-      m_Calls: []
-  offsetRectTransform: {fileID: 0}
-  offsetTop: 0
-  offsetBottom: 0
-  offsetLeft: 0
-  offsetRight: 0
-  isStaticOffsetTop: 0
-  isStaticOffsetBottom: 0
-  isStaticOffsetLeft: 0
-  isStaticOffsetRight: 0
---- !u!114 &6229799672984302410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3079897450835693405}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e3dd0a740277a4085637d7a029f98d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  keyboardButton: 0
-  type: 0
+  keyboardButton: 112
+  type: 1
   normal: {fileID: 21300000, guid: 4d1d4a701e4142c4095fcc72c30829f2, type: 3}
   hover: {fileID: 21300000, guid: 18d79780fa0d59c41aeafaa4e0ac74d1, type: 3}
   push: {fileID: 21300000, guid: 833a686f0a3bae243ac6ea7ec229ace4, type: 3}
-  tooltip: 
+  tooltip: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0441\u0446\u0435\u043D\u043E\u0439
+    (P)"
   disabled: {fileID: 0}
   isDisabled: 0
   disabledConditions: []
-  clickType: 0
+  clickType: 1
   clickButtonState: 0
   normalOff: {fileID: 21300000, guid: ef0a705d757b98a4198c3e6880f99d50, type: 3}
   hoverOff: {fileID: 21300000, guid: 148202fc160b5264d908e87e3670ebfe, type: 3}
@@ -631,7 +624,100 @@ MonoBehaviour:
   selected: {fileID: 0}
   onClick:
     m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5991422403939262662}
+        m_TargetAssemblyTypeName: SceneTool, Assembly-CSharp
+        m_MethodName: SwitchPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &9121440804113743006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3079897450835693405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2258e9ec74eb49a9b0273ecfd243d655, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveRect: 1
+  moveRectTransform: {fileID: 0}
+  obstacles: []
+  onBeginDrag:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8873620265820317428}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 7575770653311301665}
+        m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
+        m_MethodName: set_blocksRaycasts
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDrag:
+    m_PersistentCalls:
       m_Calls: []
+  onEndDrag:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8873620265820317428}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7575770653311301665}
+        m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
+        m_MethodName: set_blocksRaycasts
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  offsetRectTransform: {fileID: 1137679482013042759}
+  offsetTop: -38
+  offsetBottom: 0
+  offsetLeft: -2
+  offsetRight: 2
+  isStaticOffsetTop: 0
+  isStaticOffsetBottom: 0
+  isStaticOffsetLeft: 1
+  isStaticOffsetRight: 1
 --- !u!1 &3662976310163503119
 GameObject:
   m_ObjectHideFlags: 0
@@ -790,8 +876,8 @@ GameObject:
   - component: {fileID: 4704369430035888662}
   - component: {fileID: 2382096663754250300}
   - component: {fileID: 6397437064478156686}
-  - component: {fileID: 6625523868906742236}
-  - component: {fileID: 3313995013077719916}
+  - component: {fileID: 1429175933486733268}
+  - component: {fileID: 8827723120324669019}
   m_Layer: 5
   m_Name: Sound
   m_TagString: Untagged
@@ -859,7 +945,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6625523868906742236
+--- !u!114 &1429175933486733268
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -868,31 +954,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5058676187750175887}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a875ae16cc223a458d72c36b4adc40b, type: 3}
+  m_Script: {fileID: 11500000, guid: 54a3e7e0a9c083f42b7f98f11c40b8d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMixerMaster: {fileID: 0}
-  nameMixers: []
-  indexesMixer: 
-  maskMixer: 0
---- !u!114 &3313995013077719916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5058676187750175887}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e3dd0a740277a4085637d7a029f98d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  keyboardButton: 0
-  type: 0
+  keyboardButton: 104
+  type: 8
   normal: {fileID: 21300000, guid: 05ba2811557baf444b3108dcd2723002, type: 3}
   hover: {fileID: 21300000, guid: 167c2456480ae3c48b45b2e678da0473, type: 3}
   push: {fileID: 21300000, guid: 22cfaa03d83aa5c438e4ff8c62b55f88, type: 3}
-  tooltip: 
+  tooltip: "\u0417\u0432\u0443\u043A (H)"
   disabled: {fileID: 21300000, guid: da5b0c36938d23443b6b703b42201a64, type: 3}
   isDisabled: 0
   disabledConditions: []
@@ -904,7 +974,31 @@ MonoBehaviour:
   selected: {fileID: 0}
   onClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8827723120324669019}
+        m_TargetAssemblyTypeName: ChangeVolumeSound, Assembly-CSharp
+        m_MethodName: SwitchVolumeBar
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8827723120324669019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5058676187750175887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b79a8981c29b74f810a5f8155c7f6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5107677399940503481
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,8 +1009,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6300865050086167315}
   - component: {fileID: 7747196390243690140}
+  - component: {fileID: 5991422403939262662}
   - component: {fileID: 7575770653311301665}
-  - component: {fileID: 1843662888247685653}
   m_Layer: 5
   m_Name: Scene tools
   m_TagString: Untagged
@@ -945,8 +1039,8 @@ RectTransform:
   - {fileID: 8640615790628675952}
   - {fileID: 958005212519130092}
   - {fileID: 1877721954751439919}
-  - {fileID: 8568786112434385866}
   - {fileID: 4704369430035888662}
+  - {fileID: 8568786112434385866}
   - {fileID: 2461218393560760091}
   m_Father: {fileID: 3523537621827567626}
   m_RootOrder: 0
@@ -964,6 +1058,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5107677399940503481}
   m_CullTransparentMesh: 1
+--- !u!114 &5991422403939262662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5107677399940503481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9350cb6d29c91049b02ea88562d9e41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  window: {fileID: 1137679482013042759}
+  buttonCamera: {fileID: 3662398093053426270}
+  buttonUp: {fileID: 8470527395445327312}
+  buttonDown: {fileID: 3440763535528537293}
+  buttonLeft: {fileID: 3592813603419213006}
+  buttonRight: {fileID: 3636921005255095730}
+  buttonStartReturn: {fileID: 8791230778592084732}
+  buttonMinus: {fileID: 7017267488334148279}
+  buttonPlus: {fileID: 8654707697525295343}
+  buttonSound: {fileID: 1429175933486733268}
+  scenes: {fileID: 4586205828846424821}
+  dragUI: {fileID: 9121440804113743006}
+  tooltip: {fileID: 457784487297932477}
 --- !u!225 &7575770653311301665
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -976,32 +1095,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &1843662888247685653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5107677399940503481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5284ddeb55c8894e89d8fca6e74bafc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  window: {fileID: 0}
-  buttonCamera: {fileID: 0}
-  buttonUp: {fileID: 0}
-  buttonDown: {fileID: 0}
-  buttonLeft: {fileID: 0}
-  buttonRight: {fileID: 0}
-  buttonStartReturn: {fileID: 0}
-  buttonMinus: {fileID: 0}
-  buttonPlus: {fileID: 0}
-  buttonSound: {fileID: 0}
-  scenes: {fileID: 0}
-  dragUI: {fileID: 0}
-  changeVolumeSound: {fileID: 0}
-  tooltip: {fileID: 0}
 --- !u!1 &5365255846834800754
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,7 +1106,7 @@ GameObject:
   - component: {fileID: 958005212519130092}
   - component: {fileID: 1501014245568224578}
   - component: {fileID: 86205000929106633}
-  - component: {fileID: 5056116221524822213}
+  - component: {fileID: 7017267488334148279}
   m_Layer: 5
   m_Name: ZoomMinus
   m_TagString: Untagged
@@ -1079,7 +1172,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5056116221524822213
+--- !u!114 &7017267488334148279
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1088,15 +1181,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5365255846834800754}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5716d18a405b1fe4ba46b50ce221a9fa, type: 3}
+  m_Script: {fileID: 11500000, guid: d3fbda0f0f2823b40b3c7cfca2ea16ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardButton: 0
+  keyboardButton: 102
   type: 7
   normal: {fileID: 21300000, guid: 22362a8cf2d035840af5876426d7dd30, type: 3}
   hover: {fileID: 21300000, guid: f2139872b2b53e2439ad41e95ffaf6b4, type: 3}
   push: {fileID: 21300000, guid: f03c27589f5664b4996196003d256760, type: 3}
-  tooltip: 
+  tooltip: "\u041E\u0442\u0434\u0430\u043B\u0438\u0442\u044C (F)"
   disabled: {fileID: 21300000, guid: 1dedf672248864545bd98053837eb62a, type: 3}
   isDisabled: 0
   disabledConditions: []
@@ -1115,7 +1208,7 @@ GameObject:
   - component: {fileID: 6038785726741446577}
   - component: {fileID: 969998670437249232}
   - component: {fileID: 6345422721519129821}
-  - component: {fileID: 4515707565833070631}
+  - component: {fileID: 3440763535528537293}
   m_Layer: 5
   m_Name: Down
   m_TagString: Untagged
@@ -1181,7 +1274,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4515707565833070631
+--- !u!114 &3440763535528537293
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1190,15 +1283,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6096403950396018535}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5716d18a405b1fe4ba46b50ce221a9fa, type: 3}
+  m_Script: {fileID: 11500000, guid: d3fbda0f0f2823b40b3c7cfca2ea16ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardButton: 0
+  keyboardButton: 115
   type: 3
-  normal: {fileID: 21300000, guid: f2f81abbb188ec444a104e8f73818d5c, type: 3}
+  normal: {fileID: 21300000, guid: b6b961733e890f347964176c03214dad, type: 3}
   hover: {fileID: 21300000, guid: 5110bb04bcb98dd4b878a248ae4d4178, type: 3}
-  push: {fileID: 21300000, guid: b6b961733e890f347964176c03214dad, type: 3}
-  tooltip: 
+  push: {fileID: 21300000, guid: f2f81abbb188ec444a104e8f73818d5c, type: 3}
+  tooltip: "\u0412\u043D\u0438\u0437 (S)"
   disabled: {fileID: 21300000, guid: 13eef733f08867244a311188711c6a42, type: 3}
   isDisabled: 0
   disabledConditions: []
@@ -1217,7 +1310,7 @@ GameObject:
   - component: {fileID: 4515700442508891763}
   - component: {fileID: 6505275895756299862}
   - component: {fileID: 5523087052262533428}
-  - component: {fileID: 220192915746594461}
+  - component: {fileID: 8470527395445327312}
   m_Layer: 5
   m_Name: Up
   m_TagString: Untagged
@@ -1283,7 +1376,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &220192915746594461
+--- !u!114 &8470527395445327312
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1292,15 +1385,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6228917267665772052}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5716d18a405b1fe4ba46b50ce221a9fa, type: 3}
+  m_Script: {fileID: 11500000, guid: d3fbda0f0f2823b40b3c7cfca2ea16ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardButton: 0
+  keyboardButton: 119
   type: 2
-  normal: {fileID: 21300000, guid: f2f81abbb188ec444a104e8f73818d5c, type: 3}
+  normal: {fileID: 21300000, guid: b6b961733e890f347964176c03214dad, type: 3}
   hover: {fileID: 21300000, guid: 5110bb04bcb98dd4b878a248ae4d4178, type: 3}
-  push: {fileID: 21300000, guid: b6b961733e890f347964176c03214dad, type: 3}
-  tooltip: 
+  push: {fileID: 21300000, guid: f2f81abbb188ec444a104e8f73818d5c, type: 3}
+  tooltip: "\u0412\u0432\u0435\u0440\u0445 (W)"
   disabled: {fileID: 21300000, guid: 13eef733f08867244a311188711c6a42, type: 3}
   isDisabled: 0
   disabledConditions: []
@@ -1319,7 +1412,7 @@ GameObject:
   - component: {fileID: 1877721954751439919}
   - component: {fileID: 1227287930317310825}
   - component: {fileID: 7339787256278088416}
-  - component: {fileID: 7468205485745810114}
+  - component: {fileID: 8654707697525295343}
   m_Layer: 5
   m_Name: ZoomPlus
   m_TagString: Untagged
@@ -1385,7 +1478,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7468205485745810114
+--- !u!114 &8654707697525295343
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1394,15 +1487,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7252783486022513184}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5716d18a405b1fe4ba46b50ce221a9fa, type: 3}
+  m_Script: {fileID: 11500000, guid: d3fbda0f0f2823b40b3c7cfca2ea16ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardButton: 0
+  keyboardButton: 114
   type: 8
   normal: {fileID: 21300000, guid: e30a554be832e3643a24db8fa465ac7c, type: 3}
   hover: {fileID: 21300000, guid: adbfa1f67ce5164418b05a9c6ae5d6e6, type: 3}
   push: {fileID: 21300000, guid: c4a61e6711f7c054abc318ae6038f30f, type: 3}
-  tooltip: 
+  tooltip: "\u041F\u0440\u0438\u0431\u043B\u0438\u0437\u0438\u0442\u044C (R)"
   disabled: {fileID: 21300000, guid: cb533de68e2596248b18e85e49089d11, type: 3}
   isDisabled: 0
   disabledConditions: []
@@ -1556,7 +1649,7 @@ GameObject:
   - component: {fileID: 4534824247076179390}
   - component: {fileID: 7398293909722879210}
   - component: {fileID: 6369002775646278017}
-  - component: {fileID: 5862845624867642900}
+  - component: {fileID: 3636921005255095730}
   m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
@@ -1622,7 +1715,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5862845624867642900
+--- !u!114 &3636921005255095730
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1631,15 +1724,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7475613014170237895}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5716d18a405b1fe4ba46b50ce221a9fa, type: 3}
+  m_Script: {fileID: 11500000, guid: d3fbda0f0f2823b40b3c7cfca2ea16ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardButton: 0
+  keyboardButton: 100
   type: 5
-  normal: {fileID: 21300000, guid: f2f81abbb188ec444a104e8f73818d5c, type: 3}
+  normal: {fileID: 21300000, guid: b6b961733e890f347964176c03214dad, type: 3}
   hover: {fileID: 21300000, guid: 5110bb04bcb98dd4b878a248ae4d4178, type: 3}
-  push: {fileID: 21300000, guid: b6b961733e890f347964176c03214dad, type: 3}
-  tooltip: 
+  push: {fileID: 21300000, guid: f2f81abbb188ec444a104e8f73818d5c, type: 3}
+  tooltip: "\u0412\u043F\u0440\u0430\u0432\u043E (D)"
   disabled: {fileID: 21300000, guid: 13eef733f08867244a311188711c6a42, type: 3}
   isDisabled: 0
   disabledConditions: []
@@ -1658,7 +1751,7 @@ GameObject:
   - component: {fileID: 6582804110718517765}
   - component: {fileID: 3928945091020710023}
   - component: {fileID: 307301170607803559}
-  - component: {fileID: 7654851720751632953}
+  - component: {fileID: 3592813603419213006}
   m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
@@ -1724,7 +1817,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7654851720751632953
+--- !u!114 &3592813603419213006
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1733,15 +1826,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7561038917759857903}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5716d18a405b1fe4ba46b50ce221a9fa, type: 3}
+  m_Script: {fileID: 11500000, guid: d3fbda0f0f2823b40b3c7cfca2ea16ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardButton: 0
+  keyboardButton: 97
   type: 4
-  normal: {fileID: 21300000, guid: f2f81abbb188ec444a104e8f73818d5c, type: 3}
+  normal: {fileID: 21300000, guid: b6b961733e890f347964176c03214dad, type: 3}
   hover: {fileID: 21300000, guid: 5110bb04bcb98dd4b878a248ae4d4178, type: 3}
-  push: {fileID: 21300000, guid: b6b961733e890f347964176c03214dad, type: 3}
-  tooltip: 
+  push: {fileID: 21300000, guid: f2f81abbb188ec444a104e8f73818d5c, type: 3}
+  tooltip: "\u0412\u043B\u0435\u0432\u043E (A)"
   disabled: {fileID: 21300000, guid: 13eef733f08867244a311188711c6a42, type: 3}
   isDisabled: 0
   disabledConditions: []
