@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UISceneTool.Scripts;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
@@ -11,16 +9,18 @@ public class UIRootSceneTool
     public struct UIButtonSceneTool
     {
         public Button Background;
-        public VisualElement Frontground;
+        public VisualElement Foreground;
         public VisualElement Icon;
 
         public UIButtonSceneTool(Button background)
         {
             Background = background;
-            Frontground = Background.Children().First();
-            Icon = Frontground.Children().First();
+            Foreground = Background.Children().First();
+            Icon = Foreground.Children().First();
         }
     }
+
+    public VisualElement GetCamera => _camera.Background;
 
     private readonly VisualElement _root;
 
@@ -35,30 +35,14 @@ public class UIRootSceneTool
     private UIButtonSceneTool _return;
     private UIButtonSceneTool _sound;
     private VisualElement _scenes;
-
-    private Vector3 _offsetOriginDrag;
-
-    public Action<PointerMoveEvent> onCameraBeginDrag;
-    public Action<PointerMoveEvent> onCameraDrag;
-    public Vector3 GetOffsetOriginDrag => _offsetOriginDrag;
-
-    public Vector3 SetPositionWindow
-    {
-        set => _window.transform.position = value;
-    }
-
-    public Vector2 GetSizeWindow => new Vector2(_window.resolvedStyle.width, _window.resolvedStyle.height);
-    public Vector2 GetPositionWindow => new Vector2(_window.transform.position.x, _window.transform.position.y);
-
-    public IManipulator AddManipulatorToCamera
-    {
-        set => _camera.Background.AddManipulator(value);
-    }
+    
+    private MouseScrollManipulation _mouseScrollManipulation;
+    private DragCameraManipulator _dragCameraManipulator;
 
     public UIRootSceneTool(UIDocument uiDocument)
     {
         _root = uiDocument.rootVisualElement;
-
+        
         _window = _root.Q<VisualElement>("Window");
         _camera = new UIButtonSceneTool(_root.Q<Button>("Camera"));
         _zoomPlus = new UIButtonSceneTool(_root.Q<Button>("ZoomPlus"));
@@ -71,6 +55,9 @@ public class UIRootSceneTool
         _sound = new UIButtonSceneTool(_root.Q<Button>("Sound"));
         _scenes = _root.Q<VisualElement>("Scenes");
 
+        _mouseScrollManipulation = new MouseScrollManipulation(null);
+        _dragCameraManipulator = new DragCameraManipulator(null, null, null, SwitchCameraElements);
+        
         _zoomPlus.Background.AddManipulator(new ResizeButtonManipulator());
         _zoomMinus.Background.AddManipulator(new ResizeButtonManipulator());
         _up.Background.AddManipulator(new ResizeButtonManipulator());
@@ -79,43 +66,53 @@ public class UIRootSceneTool
         _right.Background.AddManipulator(new ResizeButtonManipulator());
         _return.Background.AddManipulator(new ResizeButtonManipulator());
         _sound.Background.AddManipulator(new ResizeButtonManipulator());
+        _sound.Background.AddManipulator(_mouseScrollManipulation);
         _camera.Background.AddManipulator(new ResizeButtonManipulator());
-        _camera.Background.AddManipulator(new DragCameraManipulator(null, null, null, SwitchCameraElements));
+        _camera.Background.AddManipulator(_dragCameraManipulator);
+        
+        _zoomPlus.Foreground.AddManipulator(new MouseHoverManipulation());
+        _zoomMinus.Foreground.AddManipulator(new MouseHoverManipulation());
+        _up.Foreground.AddManipulator(new MouseHoverManipulation());
+        _left.Foreground.AddManipulator(new MouseHoverManipulation());
+        _down.Foreground.AddManipulator(new MouseHoverManipulation());
+        _right.Foreground.AddManipulator(new MouseHoverManipulation());
+        _return.Foreground.AddManipulator(new MouseHoverManipulation());
+        _sound.Foreground.AddManipulator(new MouseHoverManipulation());
+        _camera.Foreground.AddManipulator(new MouseHoverManipulation());
     }
 
-    private bool _isCameraDisable => _camera.Background.ClassListContains("CameraBackgroundClicked");
+    private bool _isCameraDisable => _camera.Background.ClassListContains("ColorWhite");
+
+    #region Camera
 
     private void CameraBtnSwitch()
-    {
-        _camera.Background.ToggleInClassList("CameraBackgroundClicked");
-        _camera.Frontground.ToggleInClassList("CameraFrontgroundClicked");
-        _camera.Icon.ToggleInClassList("CameraIconClicked");
-    }
+        {
+            _camera.Background.ToggleInClassList("ColorWhite");
+            _camera.Background.ToggleInClassList("ColorGreen");
+            _camera.Foreground.ToggleInClassList("ColorWhite");
+            _camera.Foreground.ToggleInClassList("ColorGreen");
+            _camera.Icon.ToggleInClassList("ColorWhite");
+            _camera.Icon.ToggleInClassList("ColorGreen");
+        }
+    
+        public void SwitchCameraElements()
+        {
+            CameraBtnSwitch();
+            var value = !_isCameraDisable;
+            _zoomPlus.Background.visible = value;
+            _zoomMinus.Background.visible = value;
+            _up.Background.visible = value;
+            _left.Background.visible = value;
+            _down.Background.visible = value;
+            _right.Background.visible = value;
+            _return.Background.visible = value;
+            _sound.Background.visible = value;
+            _scenes.visible = value;
+        }
 
-    public void SwitchCameraElements()
-    {
-        CameraBtnSwitch();
-        var value = !_isCameraDisable;
-        _zoomPlus.Background.visible = value;
-        _zoomMinus.Background.visible = value;
-        _up.Background.visible = value;
-        _left.Background.visible = value;
-        _down.Background.visible = value;
-        _right.Background.visible = value;
-        _return.Background.visible = value;
-        _sound.Background.visible = value;
-        _scenes.visible = value;
-    }
+    #endregion
 
-    public void OnClickCamera(Action action)
-    {
-        _root.Q<Button>("Camera").clicked += () => { action?.Invoke(); };
-    }
-
-    public void OnCameraDrag(Action<PointerMoveEvent> action)
-    {
-        _camera.Background.RegisterCallback<PointerMoveEvent>(evt => { action?.Invoke(evt); });
-    }
+    #region Scenes
 
     public void AddScenes(List<UnityEvent> scenesAction)
     {
@@ -126,9 +123,9 @@ public class UIRootSceneTool
             if (i % 3 == 0) sceneRow = AddRowScene(scenes, (byte)(i / 3));
             AddScene(sceneRow, (byte)(i + 1), scenesAction[i]);
         }
-        
+
         ChangeLeftPaddingFirstRow();
-        
+
         if (scenesAction.Count > 0)
             SelectScene(_root.Q<Button>("Scene1"));
     }
@@ -144,6 +141,7 @@ public class UIRootSceneTool
             o.value = 100f;
             scenesRow.style.paddingLeft = o;
         }
+
         scenes.Add(scenesRow);
         return scenesRow;
     }
@@ -152,6 +150,7 @@ public class UIRootSceneTool
     {
         var scene = new Button();
         scene.AddToClassList("Scene");
+        scene.AddToClassList("ColorWhite");
         scene.name = "Scene" + index;
         scene.AddManipulator(new EventClickManipulation(() =>
         {
@@ -159,23 +158,28 @@ public class UIRootSceneTool
             SelectScene(scene);
         }, action));
 
-        var sceneFrontground = new VisualElement();
-        sceneFrontground.AddToClassList("SceneFrontground");
-        sceneFrontground.name = "SceneFrontground" + index;
+        var sceneForeground = new VisualElement();
+        sceneForeground.AddToClassList("SceneForeground");
+        sceneForeground.AddToClassList("ColorGreen");
+        sceneForeground.name = "SceneForeground" + index;
 
         var sceneText = new Label();
         sceneText.AddToClassList("SceneText");
+        sceneText.AddToClassList("ColorWhite");
         sceneText.text = index.ToString();
         sceneText.name = "SceneText" + sceneText.text;
 
-        sceneFrontground.Add(sceneText);
-        scene.Add(sceneFrontground);
+        sceneForeground.Add(sceneText);
+        scene.Add(sceneForeground);
         scenesRow.Add(scene);
+        
+        scene.AddManipulator(new ResizeButtonManipulator());
+        sceneForeground.AddManipulator(new MouseHoverManipulation());
     }
 
     private void ChangeLeftPaddingFirstRow()
     {
-        var sceneRow = _root.Q<VisualElement>(null,"SceneRow");
+        var sceneRow = _root.Q<VisualElement>(null, "SceneRow");
         var newPaddingLeft = sceneRow.style.paddingLeft;
         newPaddingLeft.value = (192 - sceneRow.childCount * 52 - (18 * (sceneRow.childCount - 1))) / 2f;
         sceneRow.style.paddingLeft = newPaddingLeft;
@@ -183,17 +187,49 @@ public class UIRootSceneTool
 
     private void UnSelectScenes()
     {
-        var scene = _root.Q<Button>(null, "SceneSelected");
-
-        scene.RemoveFromClassList("SceneSelected");
-        scene.Children().First().RemoveFromClassList("SceneFrontgroundSelected");
-        scene.Children().First().Children().First().RemoveFromClassList("SceneTextSelected");
+        var scene = _root.Q<Button>(null, "Scene", "ColorGreen");
+        
+        if(scene == null) return;
+        
+        scene.RemoveFromClassList("ColorGreen");
+        scene.Children().First().RemoveFromClassList("ColorWhite");
+        scene.Children().First().Children().First().RemoveFromClassList("ColorGreen");
+        scene.AddToClassList("ColorWhite");
+        scene.Children().First().AddToClassList("ColorGreen");
+        scene.Children().First().Children().First().AddToClassList("ColorWhite");
     }
 
     private void SelectScene(VisualElement scene)
     {
-        scene.AddToClassList("SceneSelected");
-        scene.Children().First().AddToClassList("SceneFrontgroundSelected");
-        scene.Children().First().Children().First().AddToClassList("SceneTextSelected");
+        scene.RemoveFromClassList("ColorWhite");
+        scene.Children().First().RemoveFromClassList("ColorGreen");
+        scene.Children().First().Children().First().RemoveFromClassList("ColorWhite");
+        scene.AddToClassList("ColorGreen");
+        scene.Children().First().AddToClassList("ColorWhite");
+        scene.Children().First().Children().First().AddToClassList("ColorGreen");
     }
+
+    #endregion
+
+    #region SoundUI
+
+    public void SoundDisabled()
+    {
+        _root.Q<Button>("Sound").AddToClassList("SoundDisabledWhite");
+        _root.Q<VisualElement>("SoundForeground").AddToClassList("SoundDisabledGrey");
+        _root.Q<VisualElement>("SoundIcon").AddToClassList("SoundDisabledWhite");
+        _root.Q<VisualElement>("SoundBar").AddToClassList("SoundDisabledWhite");
+        _root.Q<Button>("Sound").RemoveManipulator(_mouseScrollManipulation);
+    }
+
+    private void SoundDeactivated()
+    {
+        _root.Q<Button>("Sound").AddToClassList("SoundDisabledWhite");
+        _root.Q<VisualElement>("SoundForeground").AddToClassList("DeactivateForeground");
+        _root.Q<VisualElement>("SoundIcon").AddToClassList("SoundDisabledWhite");
+        _root.Q<VisualElement>("SoundBar").AddToClassList("SoundDisabledWhite");
+        _root.Q<Button>("Sound").RemoveManipulator(_mouseScrollManipulation);
+    }
+
+    #endregion
 }

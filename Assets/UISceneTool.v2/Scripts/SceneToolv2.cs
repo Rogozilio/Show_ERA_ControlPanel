@@ -24,14 +24,33 @@ public class SceneToolv2 : MonoBehaviour
         public List<UnityEvent> clickScene;
     }
 
+    [Serializable]
+    public struct AudioMixerData
+    {
+        public AudioMixerGroup audioMixerMaster;
+        public List<string> nameMixers;
+        public List<int> indexesMixer;
+        public int maskMixer;
+    }
+
     [Inject] private UIRootSceneTool _uiRoot;
 
     [SerializeField] private SceneToolEvents _sceneToolEvents;
+    [SerializeField] private AudioMixerData _audioMixerData;
 
     private void Awake()
     {
         _uiRoot.AddScenes(_sceneToolEvents.clickScene);
+        
+        if(!_audioMixerData.audioMixerMaster)
+            _uiRoot.SoundDisabled();
+        else
+        {
+            
+        }
     }
+    
+    
 
     public void Test(string text)
     {
@@ -57,13 +76,13 @@ public class SceneToolv2Editor : Editor
         Sound,
         Scenes
     }
-    
+
     private SerializedProperty _sceneToolEvents;
-    private List<SerializedObject> _scenes;
-    private SerializedProperty _dragUI;
-    private SerializedProperty _changeVolumeSound;
+    private SerializedProperty _audioMixerData;
 
     private ButtonSceneToolType _activeButton;
+
+    #region TextureForEditor
 
     private Texture2D _textureCamera;
     private Texture2D _textureArrowUp;
@@ -87,14 +106,17 @@ public class SceneToolv2Editor : Editor
     private Texture2D _textureScenesActive;
     private Texture2D _textureHover;
 
+    #endregion
+
     private GUIStyle style;
     private GUILayoutOption[] sizeButton;
 
     private void OnEnable()
     {
         _sceneToolEvents = serializedObject.FindProperty("_sceneToolEvents");
-        _dragUI = serializedObject.FindProperty("dragUI");
-        _changeVolumeSound = serializedObject.FindProperty("changeVolumeSound");
+        _audioMixerData = serializedObject.FindProperty("_audioMixerData");
+
+        #region InitTextureForEditor
 
         _textureCamera = Resources.Load("Cam_clean") as Texture2D;
         _textureArrowUp = Resources.Load("Arrow_up_clean") as Texture2D;
@@ -118,6 +140,8 @@ public class SceneToolv2Editor : Editor
         _textureScenesActive = Resources.Load("Scenes_active") as Texture2D;
         _textureHover = Resources.Load("Hover") as Texture2D;
 
+        #endregion
+
         style = new GUIStyle();
         style.padding = new RectOffset(3, 3, 3, 3);
         style.hover.background = _textureHover;
@@ -125,13 +149,6 @@ public class SceneToolv2Editor : Editor
         sizeButton = new[] { GUILayout.Width(50f), GUILayout.Height(50f) };
 
         _activeButton = ButtonSceneToolType.None;
-
-        _scenes ??= new List<SerializedObject>();
-        _scenes.Clear();
-        // for (var i = 0; i < scenes.transform.childCount; i++)
-        // {
-        //     _scenes.Add(new SerializedObject(scenes.transform.GetChild(i).GetComponent<ButtonClickSceneTool>()));
-        // }
     }
 
     public override void OnInspectorGUI()
@@ -204,7 +221,7 @@ public class SceneToolv2Editor : Editor
         {
             case ButtonSceneToolType.Camera:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("clickCamera"));
-                DrawOptionsObstacles(_dragUI);
+                //DrawOptionsObstacles(_dragUI);
                 break;
             case ButtonSceneToolType.Up:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("holdUp"));
@@ -229,7 +246,7 @@ public class SceneToolv2Editor : Editor
                 break;
             case ButtonSceneToolType.Sound:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("clickSound"));
-                DrawOptionAudioMixer(_changeVolumeSound);
+                DrawOptionAudioMixer(_audioMixerData);
                 break;
             case ButtonSceneToolType.Scenes:
                 OptionsScenes(_sceneToolEvents.FindPropertyRelative("clickScene"));
@@ -313,69 +330,53 @@ public class SceneToolv2Editor : Editor
         objectRef.ApplyModifiedProperties();
     }
 
-    private void DrawOptionAudioMixer(SerializedProperty changeVolumeSound)
+    private void DrawOptionAudioMixer(SerializedProperty audioMixerData)
     {
+        var audioMixerMaster = audioMixerData.FindPropertyRelative("audioMixerMaster");
+        
         EditorGUILayout.Space();
-        EditorGUILayout.PropertyField(changeVolumeSound);
+        EditorGUILayout.PropertyField(audioMixerMaster);
 
-        if (!changeVolumeSound.objectReferenceValue)
+        if (!audioMixerMaster.objectReferenceValue)
         {
             EditorGUILayout.HelpBox(
-                changeVolumeSound.name +
-                " no assigned. Please, move object with component ChangeVolumeSound to field above.",
+                audioMixerMaster.name + " no assigned. Please, move audio mixer master to field above.",
                 MessageType.Warning);
             return;
         }
 
-        var objectRef = new SerializedObject(changeVolumeSound.objectReferenceValue);
-        var propertyAudioMixerMaster = objectRef.FindProperty("audioMixerMaster");
-        EditorGUILayout.PropertyField(propertyAudioMixerMaster);
-        var propertyMaskMixer = objectRef.FindProperty("maskMixer");
-
-        if (!propertyAudioMixerMaster.objectReferenceValue)
-        {
-            propertyMaskMixer.intValue = 1;
-            EditorGUILayout.HelpBox(
-                propertyAudioMixerMaster.name + " no assigned. Please, move audio mixer master to field above.",
-                MessageType.Warning);
-            objectRef.ApplyModifiedProperties();
-            return;
-        }
-
-        var propertyNameMixers = objectRef.FindProperty("nameMixers");
-        propertyNameMixers.arraySize = 0;
-
-        objectRef.FindProperty("audioMixerMaster").FindPropertyRelative("audioMixer");
-        var audioMixerObj = objectRef.FindProperty("audioMixerMaster").objectReferenceValue as AudioMixerGroup;
+        var maskMixer = audioMixerData.FindPropertyRelative("maskMixer");
+        var nameMixers = audioMixerData.FindPropertyRelative("nameMixers");
+        nameMixers.arraySize = 0;
+        
+        var audioMixerObj = audioMixerMaster.objectReferenceValue as AudioMixerGroup;
         foreach (var mixer in audioMixerObj.audioMixer.FindMatchingGroups(""))
         {
-            propertyNameMixers.arraySize++;
-            propertyNameMixers.GetArrayElementAtIndex(propertyNameMixers.arraySize - 1).stringValue = mixer.name;
+            nameMixers.arraySize++;
+            nameMixers.GetArrayElementAtIndex(nameMixers.arraySize - 1).stringValue = mixer.name;
         }
 
-        var namesMixers = new string[propertyNameMixers.arraySize];
+        var namesMixers = new string[nameMixers.arraySize];
         for (var i = 0; i < namesMixers.Length; i++)
         {
-            namesMixers[i] = propertyNameMixers.GetArrayElementAtIndex(i).stringValue;
+            namesMixers[i] = nameMixers.GetArrayElementAtIndex(i).stringValue;
         }
 
-        propertyMaskMixer.intValue =
-            EditorGUILayout.MaskField("Audio Mixer", propertyMaskMixer.intValue, namesMixers);
+        maskMixer.intValue =
+            EditorGUILayout.MaskField("Audio Mixer", maskMixer.intValue, namesMixers);
         var indexes = new List<int>();
-        for (var i = 0; i < propertyNameMixers.arraySize; i++)
+        for (var i = 0; i < nameMixers.arraySize; i++)
         {
-            if (((1 << i) & propertyMaskMixer.intValue) != 0) indexes.Add(i);
+            if (((1 << i) & maskMixer.intValue) != 0) indexes.Add(i);
         }
 
-        var propertyIndexesMixer = objectRef.FindProperty("indexesMixer");
+        var propertyIndexesMixer = audioMixerData.FindPropertyRelative("indexesMixer");
         propertyIndexesMixer.arraySize = indexes.Count;
 
         for (var i = 0; i < indexes.Count; i++)
         {
             propertyIndexesMixer.GetArrayElementAtIndex(i).intValue = indexes[i];
         }
-
-        objectRef.ApplyModifiedProperties();
     }
 
     private void ShowConditionDisabled(SerializedProperty button)
