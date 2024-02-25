@@ -208,13 +208,12 @@
 }
 
 .TextArrow {
-    width: 60px;
-    height: 60px;
+    width: 62px;
+    height: 62px;
     -unity-font-definition: initial;
     -unity-font: url('project://database/Assets/UISceneTool.v2/Font/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=d3ae2c21498585f48a21d179f1b219da&type=3#NotInter-Regular');
     color: rgb(216, 230, 210);
     font-size: 44px;
-    -unity-text-align: middle-center;
     border-top-width: 0;
     border-right-width: 0;
     border-bottom-width: 0;
@@ -229,6 +228,8 @@
     padding-right: 0;
     padding-bottom: 0;
     padding-left: 0;
+    -unity-text-align: middle-center;
+    translate: 0 -2px;
 }
 
 .Text {

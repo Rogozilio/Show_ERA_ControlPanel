@@ -139,7 +139,23 @@ MonoBehaviour:
     clickSound:
       m_PersistentCalls:
         m_Calls: []
-    clickScene: []
+    clickScene:
+    - m_PersistentCalls:
+        m_Calls: []
+    - m_PersistentCalls:
+        m_Calls: []
+    - m_PersistentCalls:
+        m_Calls: []
+    - m_PersistentCalls:
+        m_Calls: []
+    - m_PersistentCalls:
+        m_Calls: []
+  _audioMixerData:
+    audioMixerMaster: {fileID: 24300002, guid: a2974f49aa615a64199ae7a52af4cc60, type: 2}
+    nameMixers:
+    - Master
+    indexesMixer: 00000000
+    maskMixer: -1
 --- !u!1 &5013209230702424736
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,6 +212,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5673503899245251202}
+  - component: {fileID: 2553428028654270294}
   m_Layer: 0
   m_Name: InputInstaller
   m_TagString: Untagged
@@ -218,3 +235,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3931374837602870373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2553428028654270294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8519791487551722307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37af2cd1f99d1334f8fcb157e01d2d4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputActionAsset: {fileID: -944628639613478452, guid: 3480d299a18fad84b838a96b1e70fa80, type: 3}

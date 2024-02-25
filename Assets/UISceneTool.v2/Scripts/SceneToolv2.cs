@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using Zenject;
 
 public class SceneToolv2 : MonoBehaviour
@@ -34,23 +36,115 @@ public class SceneToolv2 : MonoBehaviour
     }
 
     [Inject] private UIRootSceneTool _uiRoot;
+    [Inject] private InputSceneTool _inputSceneTool;
 
     [SerializeField] private SceneToolEvents _sceneToolEvents;
     [SerializeField] private AudioMixerData _audioMixerData;
 
+    private byte _indexActiveScene;
+
     private void Awake()
     {
         _uiRoot.AddScenes(_sceneToolEvents.clickScene);
-        
-        if(!_audioMixerData.audioMixerMaster)
+
+        _inputSceneTool.EventsHoldUp(
+            (ctx) => _uiRoot.upResizeButton.OnPointerDown(null),
+            (ctx) => _sceneToolEvents.holdUp?.Invoke(),
+            (ctx) => _uiRoot.upResizeButton.OnPointerUp(null));
+        _inputSceneTool.EventsHoldDown(
+            (ctx) => _uiRoot.downResizeButton.OnPointerDown(null),
+            (ctx) => _sceneToolEvents.holdDown?.Invoke(),
+            (ctx) => _uiRoot.downResizeButton.OnPointerUp(null));
+        _inputSceneTool.EventsHoldLeft(
+            (ctx) => _uiRoot.leftResizeButton.OnPointerDown(null),
+            (ctx) => _sceneToolEvents.holdLeft?.Invoke(),
+            (ctx) => _uiRoot.leftResizeButton.OnPointerUp(null));
+        _inputSceneTool.EventsHoldRight(
+            (ctx) => _uiRoot.rightResizeButton.OnPointerDown(null),
+            (ctx) => _sceneToolEvents.holdRight?.Invoke(),
+            (ctx) => _uiRoot.rightResizeButton.OnPointerUp(null));
+        _inputSceneTool.EventsHoldZoomIn(
+            (ctx) => _uiRoot.zoomPlusResizeButton.OnPointerDown(null),
+            (ctx) => _sceneToolEvents.holdZoomPlus?.Invoke(),
+            (ctx) => _uiRoot.zoomPlusResizeButton.OnPointerUp(null));
+        _inputSceneTool.EventsHoldZoomOut(
+            (ctx) => _uiRoot.zoomMinusResizeButton.OnPointerDown(null),
+            (ctx) => _sceneToolEvents.holdZoomMinus?.Invoke(),
+            (ctx) => _uiRoot.zoomMinusResizeButton.OnPointerUp(null));
+
+        _inputSceneTool.EventsClickCamera(
+            (ctx) => _uiRoot.cameraResizeButton.OnPointerDown(null),
+            (ctx) =>
+            {
+                _uiRoot.cameraResizeButton.OnPointerUp(null);
+                _sceneToolEvents.clickCamera?.Invoke();
+            });
+        _inputSceneTool.EventsClickReturn(
+            (ctx) => _uiRoot.returnResizeButton.OnPointerDown(null),
+            (ctx) =>
+            {
+                _uiRoot.returnResizeButton.OnPointerUp(null);
+                _sceneToolEvents.clickReturn?.Invoke();
+            });
+        _inputSceneTool.EventsClickSound(
+            (ctx) => _uiRoot.soundResizeButton.OnPointerDown(null),
+            (ctx) =>
+            {
+                _uiRoot.soundResizeButton.OnPointerUp(null);
+                _sceneToolEvents.clickSound?.Invoke();
+            });
+        _inputSceneTool.EventsClickScene(
+            (ctx) =>
+            {
+                _indexActiveScene = (byte)(ctx.ReadValue<float>() - 1);
+                if (_indexActiveScene >= _sceneToolEvents.clickScene.Count) return;
+
+                _uiRoot.scenesResizeButton[_indexActiveScene].OnPointerDown(null);
+                _uiRoot.scenesClickButton[_indexActiveScene].OnPointerDown(null);
+                _sceneToolEvents.clickScene[_indexActiveScene]?.Invoke();
+            },
+            (ctx) =>
+            {
+                if (_indexActiveScene >= _sceneToolEvents.clickScene.Count) return;
+
+                _uiRoot.scenesResizeButton[_indexActiveScene].OnPointerUp(null);
+            });
+        _inputSceneTool.EventsClickNextScene(
+            (ctx) =>
+            {
+                if (++_indexActiveScene >= _sceneToolEvents.clickScene.Count)
+                    _indexActiveScene = 0;
+
+                _uiRoot.scenesResizeButton[_indexActiveScene].OnPointerDown(null);
+                _uiRoot.scenesClickButton[_indexActiveScene].OnPointerDown(null);
+                _sceneToolEvents.clickScene[_indexActiveScene]?.Invoke();
+            },
+            (ctx) => { _uiRoot.scenesResizeButton[_indexActiveScene].OnPointerUp(null); });
+        _inputSceneTool.EventsClickPrevScene(
+            (ctx) =>
+            {
+                if (--_indexActiveScene == 255)
+                    _indexActiveScene = (byte)(_sceneToolEvents.clickScene.Count - 1);
+
+                _uiRoot.scenesResizeButton[_indexActiveScene].OnPointerDown(null);
+                _uiRoot.scenesClickButton[_indexActiveScene].OnPointerDown(null);
+                _sceneToolEvents.clickScene[_indexActiveScene]?.Invoke();
+            },
+            (ctx) => { _uiRoot.scenesResizeButton[_indexActiveScene].OnPointerUp(null); });
+
+        if (!_audioMixerData.audioMixerMaster)
             _uiRoot.SoundDisabled();
-        else
-        {
-            
-        }
     }
-    
-    
+
+    private void OnEnable()
+    {
+        _inputSceneTool.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _inputSceneTool.Disable();
+    }
 
     public void Test(string text)
     {
@@ -108,8 +202,11 @@ public class SceneToolv2Editor : Editor
 
     #endregion
 
-    private GUIStyle style;
-    private GUILayoutOption[] sizeButton;
+    private GUIStyle _style;
+    private GUILayoutOption[] _sizeButton;
+
+    private int _selectedTab = 0;
+    private string[] _tabNames = { "Init", "Main", "Input" };
 
     private void OnEnable()
     {
@@ -142,19 +239,33 @@ public class SceneToolv2Editor : Editor
 
         #endregion
 
-        style = new GUIStyle();
-        style.padding = new RectOffset(3, 3, 3, 3);
-        style.hover.background = _textureHover;
+        _style = new GUIStyle();
+        _style.padding = new RectOffset(3, 3, 3, 3);
+        _style.hover.background = _textureHover;
 
-        sizeButton = new[] { GUILayout.Width(50f), GUILayout.Height(50f) };
+        _sizeButton = new[] { GUILayout.Width(50f), GUILayout.Height(50f) };
 
+        _selectedTab = 1;
         _activeButton = ButtonSceneToolType.None;
     }
 
     public override void OnInspectorGUI()
     {
-        DrawInterfaceButtons();
-        DrawOptionsActiveButton();
+        _selectedTab = GUILayout.Toolbar(_selectedTab, _tabNames);
+        EditorGUILayout.Space();
+
+        switch (_selectedTab)
+        {
+            case 0:
+                break;
+            case 1:
+                DrawInterfaceButtons();
+                DrawOptionsActiveButton();
+                break;
+            case 2:
+                break;
+        }
+
         serializedObject.ApplyModifiedProperties();
     }
 
@@ -197,7 +308,7 @@ public class SceneToolv2Editor : Editor
     private ButtonSceneToolType DrawButton(ButtonSceneToolType activeButton, Texture2D normal, Texture2D active)
     {
         var texture = IsButtonActive(activeButton) ? active : normal;
-        var isActiveButton = GUILayout.Button(texture, style, sizeButton) || _activeButton == activeButton;
+        var isActiveButton = GUILayout.Button(texture, _style, _sizeButton) || _activeButton == activeButton;
         return isActiveButton ? activeButton : _activeButton;
     }
 
@@ -205,7 +316,7 @@ public class SceneToolv2Editor : Editor
         GUILayoutOption[] options)
     {
         var texture = IsButtonActive(activeButton) ? active : normal;
-        var isActiveButton = GUILayout.Button(texture, style, options) || _activeButton == activeButton;
+        var isActiveButton = GUILayout.Button(texture, _style, options) || _activeButton == activeButton;
         return isActiveButton ? activeButton : _activeButton;
     }
 
@@ -333,7 +444,7 @@ public class SceneToolv2Editor : Editor
     private void DrawOptionAudioMixer(SerializedProperty audioMixerData)
     {
         var audioMixerMaster = audioMixerData.FindPropertyRelative("audioMixerMaster");
-        
+
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(audioMixerMaster);
 
@@ -348,7 +459,7 @@ public class SceneToolv2Editor : Editor
         var maskMixer = audioMixerData.FindPropertyRelative("maskMixer");
         var nameMixers = audioMixerData.FindPropertyRelative("nameMixers");
         nameMixers.arraySize = 0;
-        
+
         var audioMixerObj = audioMixerMaster.objectReferenceValue as AudioMixerGroup;
         foreach (var mixer in audioMixerObj.audioMixer.FindMatchingGroups(""))
         {

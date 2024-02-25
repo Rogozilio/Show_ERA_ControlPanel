@@ -35,14 +35,26 @@ public class UIRootSceneTool
     private UIButtonSceneTool _return;
     private UIButtonSceneTool _sound;
     private VisualElement _scenes;
-    
+
+    public ResizeButtonManipulator upResizeButton;
+    public ResizeButtonManipulator downResizeButton;
+    public ResizeButtonManipulator leftResizeButton;
+    public ResizeButtonManipulator rightResizeButton;
+    public ResizeButtonManipulator zoomPlusResizeButton;
+    public ResizeButtonManipulator zoomMinusResizeButton;
+    public ResizeButtonManipulator returnResizeButton;
+    public ResizeButtonManipulator soundResizeButton;
+    public ResizeButtonManipulator cameraResizeButton;
+    public List<ResizeButtonManipulator> scenesResizeButton = new List<ResizeButtonManipulator>();
+    public List<ClickSceneManipulation> scenesClickButton = new List<ClickSceneManipulation>();
+
     private MouseScrollManipulation _mouseScrollManipulation;
     private DragCameraManipulator _dragCameraManipulator;
 
     public UIRootSceneTool(UIDocument uiDocument)
     {
         _root = uiDocument.rootVisualElement;
-        
+
         _window = _root.Q<VisualElement>("Window");
         _camera = new UIButtonSceneTool(_root.Q<Button>("Camera"));
         _zoomPlus = new UIButtonSceneTool(_root.Q<Button>("ZoomPlus"));
@@ -57,19 +69,17 @@ public class UIRootSceneTool
 
         _mouseScrollManipulation = new MouseScrollManipulation(null);
         _dragCameraManipulator = new DragCameraManipulator(null, null, null, SwitchCameraElements);
-        
-        _zoomPlus.Background.AddManipulator(new ResizeButtonManipulator());
-        _zoomMinus.Background.AddManipulator(new ResizeButtonManipulator());
-        _up.Background.AddManipulator(new ResizeButtonManipulator());
-        _left.Background.AddManipulator(new ResizeButtonManipulator());
-        _down.Background.AddManipulator(new ResizeButtonManipulator());
-        _right.Background.AddManipulator(new ResizeButtonManipulator());
-        _return.Background.AddManipulator(new ResizeButtonManipulator());
-        _sound.Background.AddManipulator(new ResizeButtonManipulator());
+        _zoomPlus.Background.AddManipulator(zoomPlusResizeButton = new ResizeButtonManipulator());
+        _zoomMinus.Background.AddManipulator(zoomMinusResizeButton = new ResizeButtonManipulator());
+        _up.Background.AddManipulator(upResizeButton = new ResizeButtonManipulator());
+        _left.Background.AddManipulator(leftResizeButton = new ResizeButtonManipulator());
+        _down.Background.AddManipulator(downResizeButton = new ResizeButtonManipulator());
+        _right.Background.AddManipulator(rightResizeButton = new ResizeButtonManipulator());
+        _return.Background.AddManipulator(returnResizeButton = new ResizeButtonManipulator());
+        _sound.Background.AddManipulator(soundResizeButton = new ResizeButtonManipulator());
         _sound.Background.AddManipulator(_mouseScrollManipulation);
-        _camera.Background.AddManipulator(new ResizeButtonManipulator());
+        _camera.Background.AddManipulator(cameraResizeButton = new ResizeButtonManipulator());
         _camera.Background.AddManipulator(_dragCameraManipulator);
-        
         _zoomPlus.Foreground.AddManipulator(new MouseHoverManipulation());
         _zoomMinus.Foreground.AddManipulator(new MouseHoverManipulation());
         _up.Foreground.AddManipulator(new MouseHoverManipulation());
@@ -86,29 +96,29 @@ public class UIRootSceneTool
     #region Camera
 
     private void CameraBtnSwitch()
-        {
-            _camera.Background.ToggleInClassList("ColorWhite");
-            _camera.Background.ToggleInClassList("ColorGreen");
-            _camera.Foreground.ToggleInClassList("ColorWhite");
-            _camera.Foreground.ToggleInClassList("ColorGreen");
-            _camera.Icon.ToggleInClassList("ColorWhite");
-            _camera.Icon.ToggleInClassList("ColorGreen");
-        }
-    
-        public void SwitchCameraElements()
-        {
-            CameraBtnSwitch();
-            var value = !_isCameraDisable;
-            _zoomPlus.Background.visible = value;
-            _zoomMinus.Background.visible = value;
-            _up.Background.visible = value;
-            _left.Background.visible = value;
-            _down.Background.visible = value;
-            _right.Background.visible = value;
-            _return.Background.visible = value;
-            _sound.Background.visible = value;
-            _scenes.visible = value;
-        }
+    {
+        _camera.Background.ToggleInClassList("ColorWhite");
+        _camera.Background.ToggleInClassList("ColorGreen");
+        _camera.Foreground.ToggleInClassList("ColorWhite");
+        _camera.Foreground.ToggleInClassList("ColorGreen");
+        _camera.Icon.ToggleInClassList("ColorWhite");
+        _camera.Icon.ToggleInClassList("ColorGreen");
+    }
+
+    public void SwitchCameraElements()
+    {
+        CameraBtnSwitch();
+        var value = !_isCameraDisable;
+        _zoomPlus.Background.visible = value;
+        _zoomMinus.Background.visible = value;
+        _up.Background.visible = value;
+        _left.Background.visible = value;
+        _down.Background.visible = value;
+        _right.Background.visible = value;
+        _return.Background.visible = value;
+        _sound.Background.visible = value;
+        _scenes.visible = value;
+    }
 
     #endregion
 
@@ -152,11 +162,12 @@ public class UIRootSceneTool
         scene.AddToClassList("Scene");
         scene.AddToClassList("ColorWhite");
         scene.name = "Scene" + index;
-        scene.AddManipulator(new EventClickManipulation(() =>
+        scenesClickButton.Add(new ClickSceneManipulation(() =>
         {
             UnSelectScenes();
             SelectScene(scene);
         }, action));
+        scene.AddManipulator(scenesClickButton.Last());
 
         var sceneForeground = new VisualElement();
         sceneForeground.AddToClassList("SceneForeground");
@@ -172,8 +183,9 @@ public class UIRootSceneTool
         sceneForeground.Add(sceneText);
         scene.Add(sceneForeground);
         scenesRow.Add(scene);
-        
-        scene.AddManipulator(new ResizeButtonManipulator());
+
+        scenesResizeButton.Add(new ResizeButtonManipulator());
+        scene.AddManipulator(scenesResizeButton.Last());
         sceneForeground.AddManipulator(new MouseHoverManipulation());
     }
 
@@ -188,9 +200,9 @@ public class UIRootSceneTool
     private void UnSelectScenes()
     {
         var scene = _root.Q<Button>(null, "Scene", "ColorGreen");
-        
-        if(scene == null) return;
-        
+
+        if (scene == null) return;
+
         scene.RemoveFromClassList("ColorGreen");
         scene.Children().First().RemoveFromClassList("ColorWhite");
         scene.Children().First().Children().First().RemoveFromClassList("ColorGreen");

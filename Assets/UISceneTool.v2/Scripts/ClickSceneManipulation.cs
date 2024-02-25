@@ -5,14 +5,14 @@ using UnityEngine.UIElements;
 
 namespace UISceneTool.Scripts
 {
-    public class EventClickManipulation : PointerManipulator
+    public class ClickSceneManipulation : PointerManipulator
     {
         private bool _isLeavePointer;
         
         private Action _onClickAction;
         private UnityEvent _onClickEvent;
 
-        public EventClickManipulation(Action onClickAction, UnityEvent onClickEvent)
+        public ClickSceneManipulation(Action onClickAction, UnityEvent onClickEvent)
         {
             _onClickAction = onClickAction;
             _onClickEvent = onClickEvent;
@@ -22,7 +22,7 @@ namespace UISceneTool.Scripts
         {
             target.RegisterCallback<PointerEnterEvent>(OnPointerEnter);
             target.RegisterCallback<PointerLeaveEvent>(OnPointerLeave);
-            target.RegisterCallback<PointerUpEvent>(OnPointerUp);
+            target.RegisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
             
         }
 
@@ -30,7 +30,7 @@ namespace UISceneTool.Scripts
         {
             target.UnregisterCallback<PointerEnterEvent>(OnPointerEnter);
             target.UnregisterCallback<PointerLeaveEvent>(OnPointerLeave);
-            target.UnregisterCallback<PointerUpEvent>(OnPointerUp);
+            target.UnregisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
         }
         private void OnPointerEnter(PointerEnterEvent evt)
         {
@@ -41,7 +41,7 @@ namespace UISceneTool.Scripts
         {
             _isLeavePointer = true;
         }
-        private void OnPointerUp(PointerUpEvent evt)
+        public void OnPointerDown(PointerDownEvent evt)
         {
             if(_isLeavePointer) return;
             

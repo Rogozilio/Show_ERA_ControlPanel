@@ -7,6 +7,8 @@ namespace UISceneTool.Scripts
     {
         private readonly float _toScale = 0.9f;
 
+        private bool _isMouseDown;
+
         protected override void RegisterCallbacksOnTarget()
         {
             target.RegisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
@@ -19,22 +21,30 @@ namespace UISceneTool.Scripts
             target.UnregisterCallback<PointerDownEvent>(OnPointerDown);
             target.UnregisterCallback<PointerUpEvent>(OnPointerUp);
             target.UnregisterCallback<PointerLeaveEvent>(OnPointerLeave);
+        }
+
+        public void OnPointerDown(PointerDownEvent evt)
+        {
+            if(_isMouseDown) return;
             
-        }
-
-        private void OnPointerDown(PointerDownEvent evt)
-        {
             DecreaseButton();
+            _isMouseDown = true;
         }
 
-        private void OnPointerUp(PointerUpEvent evt)
+        public void OnPointerUp(PointerUpEvent evt)
         {
+            if(!_isMouseDown) return;
+            
             IncreaseButton();
+            _isMouseDown = false;
         }
 
         private void OnPointerLeave(PointerLeaveEvent evt)
         {
+            if(!_isMouseDown) return;
+            
             IncreaseButton();
+            _isMouseDown = false;
         }
 
         private void DecreaseButton()
@@ -46,7 +56,6 @@ namespace UISceneTool.Scripts
         {
             target.transform.scale *= (1 / _toScale);
             target.Children().First().Children().First().transform.scale *= _toScale;
-            //Fix Scale onсe
         }
     }
 }
