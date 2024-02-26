@@ -727,6 +727,58 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.size
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[0]
+      value: Up
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[1]
+      value: Down
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[2]
+      value: Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[3]
+      value: Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[4]
+      value: ZoomIn
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[5]
+      value: ZoomOut
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[6]
+      value: SwitchPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[7]
+      value: SwitchSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[8]
+      value: ReturnBack
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[9]
+      value: NextLocation
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[10]
+      value: PrevLocation
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553428028654270294, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: actionNames.Array.data[11]
+      value: NumberLocation
+      objectReference: {fileID: 0}
     - target: {fileID: 4265711148992590458, guid: 5fca0492553694743852df2a68d72781, type: 3}
       propertyPath: m_Name
       value: UIControlPanel

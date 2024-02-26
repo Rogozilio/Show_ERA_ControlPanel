@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
@@ -207,9 +208,30 @@ public class SceneToolv2Editor : Editor
 
     private int _selectedTab = 0;
     private string[] _tabNames = { "Init", "Main", "Input" };
+    private string[] _actionNames;
+
+    private SerializedProperty _propertyActionNames;
 
     private void OnEnable()
     {
+        var inputSceneTool = FindObjectOfType<InputSceneToolInstaller>();
+        _propertyActionNames = new SerializedObject(inputSceneTool).FindProperty("actionNames");
+        if (_propertyActionNames.arraySize == 0)
+        {
+            _propertyActionNames.arraySize = 12;
+            for (var i = 0; i < _propertyActionNames.arraySize; i++)
+            {
+                _propertyActionNames.GetArrayElementAtIndex(i).stringValue = "None";
+            }
+
+            _propertyActionNames.serializedObject.ApplyModifiedProperties();
+        }
+
+        var actionNames = inputSceneTool.inputActionAsset.FindActionMap("InputControlPanel")
+            .Select(action => action.name).ToList();
+        actionNames.Insert(0, "None");
+        _actionNames = actionNames.ToArray();
+
         _sceneToolEvents = serializedObject.FindProperty("_sceneToolEvents");
         _audioMixerData = serializedObject.FindProperty("_audioMixerData");
 
@@ -263,6 +285,7 @@ public class SceneToolv2Editor : Editor
                 DrawOptionsActiveButton();
                 break;
             case 2:
+                DrawOptionInputActions();
                 break;
         }
 
@@ -571,6 +594,58 @@ public class SceneToolv2Editor : Editor
         }
 
         return names.ToArray();
+    }
+
+    private void DrawOptionInputActions()
+    {
+        EditorGUILayout.Space();
+
+        _propertyActionNames.GetArrayElementAtIndex(0).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Up"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(0).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(1).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Down"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(1).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(2).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Left"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(2).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(3).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Right"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(3).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(4).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Zoom Plus"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(4).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(5).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Zoom Minus"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(5).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(6).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Switch Panel"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(6).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(7).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Switch Sound"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(7).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(8).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Return Back"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(8).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(9).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Next Location"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(9).stringValue), _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(10).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Prev Location"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(10).stringValue),
+                _actionNames)];
+        _propertyActionNames.GetArrayElementAtIndex(11).stringValue =
+            _actionNames[EditorGUILayout.Popup(new GUIContent("Button Number Location"),
+                Array.IndexOf(_actionNames, _propertyActionNames.GetArrayElementAtIndex(11).stringValue),
+                _actionNames)];
+
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Open Input Actions"))
+        {
+            AssetDatabase.OpenAsset(FindObjectOfType<InputSceneToolInstaller>().inputActionAsset);
+        }
+
+        _propertyActionNames.serializedObject.ApplyModifiedProperties();
     }
 }
 #endif

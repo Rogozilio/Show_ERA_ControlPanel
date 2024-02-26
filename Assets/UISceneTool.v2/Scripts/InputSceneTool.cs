@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -48,22 +50,33 @@ public class InputSceneTool
     private readonly InputClickData _clickNextScene = new InputClickData();
     private readonly InputClickData _clickPrevScene = new InputClickData();
 
-    public InputSceneTool(InputActionAsset inputActionAsset)
+    public InputSceneTool(InputActionAsset inputActionAsset, List<string> selectActionNames)
     {
         _inputActionAsset = inputActionAsset;
 
-        _up = _inputActionAsset.FindAction("Up");
-        _down = _inputActionAsset.FindAction("Down");
-        _left = _inputActionAsset.FindAction("Left");
-        _right = _inputActionAsset.FindAction("Right");
-        _zoomIn = _inputActionAsset.FindAction("ZoomIn");
-        _zoomOut = _inputActionAsset.FindAction("ZoomOut");
-        _switchPanel = _inputActionAsset.FindAction("SwitchPanel");
-        _switchSound = _inputActionAsset.FindAction("SwitchSound");
-        _returnBack = _inputActionAsset.FindAction("ReturnBack");
-        _nextLocation = _inputActionAsset.FindAction("NextLocation");
-        _prevLocation = _inputActionAsset.FindAction("PrevLocation");
-        _numberLocation = _inputActionAsset.FindAction("NumberLocation");
+        _up = _inputActionAsset.FindAction(selectActionNames[0]);
+        _down = _inputActionAsset.FindAction(selectActionNames[1]);
+        _left = _inputActionAsset.FindAction(selectActionNames[2]);
+        _right = _inputActionAsset.FindAction(selectActionNames[3]);
+        _zoomIn = _inputActionAsset.FindAction(selectActionNames[4]);
+        _zoomOut = _inputActionAsset.FindAction(selectActionNames[5]);
+        _switchPanel = _inputActionAsset.FindAction(selectActionNames[6]);
+        _switchSound = _inputActionAsset.FindAction(selectActionNames[7]);
+        _returnBack = _inputActionAsset.FindAction(selectActionNames[8]);
+        _nextLocation = _inputActionAsset.FindAction(selectActionNames[9]);
+        _prevLocation = _inputActionAsset.FindAction(selectActionNames[10]);
+        _numberLocation = _inputActionAsset.FindAction(selectActionNames[11]);
+
+#if(UNITY_EDITOR)
+        if (_up == null || _down == null || _left == null ||
+            _right == null || _zoomIn == null || _zoomOut == null ||
+            _switchPanel == null || _switchSound == null || _returnBack == null ||
+            _nextLocation == null || _prevLocation == null || _numberLocation == null)
+        {
+            Debug.LogError("Please, set all action input in SceneTool in tab Input");
+            return;
+        }
+#endif
 
         #region InitHold
 
@@ -223,7 +236,7 @@ public class InputSceneTool
     }
 
     #endregion
-    
+
     #region EventsClick
 
     public void EventsClickCamera(Action<InputAction.CallbackContext> onStart
@@ -246,21 +259,21 @@ public class InputSceneTool
         _clickSound.onStartClick += onStart;
         _clickSound.onEndClick += onEnd;
     }
-    
+
     public void EventsClickScene(Action<InputAction.CallbackContext> onStart
         , Action<InputAction.CallbackContext> onEnd)
     {
         _clickScene.onStartClick += onStart;
         _clickScene.onEndClick += onEnd;
     }
-    
+
     public void EventsClickNextScene(Action<InputAction.CallbackContext> onStart
         , Action<InputAction.CallbackContext> onEnd)
     {
         _clickNextScene.onStartClick += onStart;
         _clickNextScene.onEndClick += onEnd;
     }
-    
+
     public void EventsClickPrevScene(Action<InputAction.CallbackContext> onStart
         , Action<InputAction.CallbackContext> onEnd)
     {
