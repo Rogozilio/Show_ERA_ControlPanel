@@ -18,14 +18,14 @@ namespace UISceneTool.Scripts
 
         protected override void UnregisterCallbacksFromTarget()
         {
-            target.UnregisterCallback<PointerDownEvent>(OnPointerDown);
+            target.UnregisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
             target.UnregisterCallback<PointerUpEvent>(OnPointerUp);
             target.UnregisterCallback<PointerLeaveEvent>(OnPointerLeave);
         }
 
         public void OnPointerDown(PointerDownEvent evt)
         {
-            if(_isMouseDown) return;
+            if(_isMouseDown || target == null) return;
             
             DecreaseButton();
             _isMouseDown = true;
@@ -33,7 +33,7 @@ namespace UISceneTool.Scripts
 
         public void OnPointerUp(PointerUpEvent evt)
         {
-            if(!_isMouseDown) return;
+            if(!_isMouseDown || target == null) return;
             
             IncreaseButton();
             _isMouseDown = false;

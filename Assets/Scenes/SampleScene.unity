@@ -183,7 +183,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -782,6 +782,186 @@ PrefabInstance:
     - target: {fileID: 4265711148992590458, guid: 5fca0492553694743852df2a68d72781, type: 3}
       propertyPath: m_Name
       value: UIControlPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _audioMixerData.maskMixer
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.up.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.down.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.left.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _audioMixerData.audioMixerMaster
+      value: 
+      objectReference: {fileID: 24300002, guid: a2974f49aa615a64199ae7a52af4cc60, type: 2}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.right.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomPlus.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomMinus.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _audioMixerData.indexesMixer.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.up.Array.data[0].target
+      value: 
+      objectReference: {fileID: 519420028}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.down.Array.data[0].target
+      value: 
+      objectReference: {fileID: 519420028}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.left.Array.data[0].target
+      value: 
+      objectReference: {fileID: 519420028}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.right.Array.data[0].target
+      value: 
+      objectReference: {fileID: 519420028}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.up.Array.data[0].component
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.down.Array.data[0].component
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.left.Array.data[0].component
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.right.Array.data[0].component
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.up.Array.data[0].nameProperty
+      value: fieldOfView
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomPlus.Array.data[0].target
+      value: 
+      objectReference: {fileID: 519420028}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.up.Array.data[0].indexProperty
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.up.Array.data[0].requiredValue
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomMinus.Array.data[0].target
+      value: 
+      objectReference: {fileID: 519420028}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.down.Array.data[0].nameProperty
+      value: fieldOfView
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.left.Array.data[0].nameProperty
+      value: fieldOfView
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.up.Array.data[0].indexComponent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.down.Array.data[0].indexProperty
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.down.Array.data[0].requiredValue
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.left.Array.data[0].indexProperty
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.left.Array.data[0].requiredValue
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.right.Array.data[0].nameProperty
+      value: fieldOfView
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomPlus.Array.data[0].component
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.down.Array.data[0].indexComponent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.left.Array.data[0].indexComponent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.right.Array.data[0].indexProperty
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.right.Array.data[0].requiredValue
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomMinus.Array.data[0].component
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.right.Array.data[0].indexComponent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomPlus.Array.data[0].nameProperty
+      value: fieldOfView
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomMinus.Array.data[0].nameProperty
+      value: fieldOfView
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomPlus.Array.data[0].indexProperty
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomPlus.Array.data[0].requiredValue
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomMinus.Array.data[0].indexProperty
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomMinus.Array.data[0].requiredValue
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomPlus.Array.data[0].indexComponent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781246300947247038, guid: 5fca0492553694743852df2a68d72781, type: 3}
+      propertyPath: _conditionsData.zoomMinus.Array.data[0].indexComponent
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 using Zenject;
 
 public class SceneToolv2 : MonoBehaviour
@@ -26,11 +24,51 @@ public class SceneToolv2 : MonoBehaviour
         public UnityEvent clickSound;
         public List<UnityEvent> clickScene;
     }
+    
+    [Serializable]
+    public struct ConditionsData
+    {
+        public List<Condition> up;
+        public List<Condition> down;
+        public List<Condition> left;
+        public List<Condition> right;
+        public List<Condition> zoomPlus;
+        public List<Condition> zoomMinus;
+
+        public bool IsDisabledConditionUp()
+        {
+            return IsDisabledCondition(up);
+        }
+        public bool IsDisabledConditionDown()
+        {
+            return IsDisabledCondition(down);
+        }
+        public bool IsDisabledConditionLeft()
+        {
+            return IsDisabledCondition(left);
+        }
+        public bool IsDisabledConditionRight()
+        {
+            return IsDisabledCondition(right);
+        }
+        public bool IsDisabledConditionZoomPlus()
+        {
+            return IsDisabledCondition(zoomPlus);
+        }
+        public bool IsDisabledConditionZoomMinus()
+        {
+            return IsDisabledCondition(zoomMinus);
+        }
+        private bool IsDisabledCondition(List<Condition> conditions)
+        {
+            return conditions.Count != 0 && conditions.All(condition => condition.GetResult());
+        }
+    }
 
     [Serializable]
     public struct AudioMixerData
     {
-        public AudioMixerGroup audioMixerMaster;
+        public AudioMixerGroup audioMixerMaster; 
         public List<string> nameMixers;
         public List<int> indexesMixer;
         public int maskMixer;
@@ -40,6 +78,7 @@ public class SceneToolv2 : MonoBehaviour
     [Inject] private InputSceneTool _inputSceneTool;
 
     [SerializeField] private SceneToolEvents _sceneToolEvents;
+    [SerializeField] private ConditionsData _conditionsData;
     [SerializeField] private AudioMixerData _audioMixerData;
 
     private byte _indexActiveScene;
@@ -142,6 +181,16 @@ public class SceneToolv2 : MonoBehaviour
         _inputSceneTool.Enable();
     }
 
+    private void FixedUpdate()
+    {
+        _uiRoot.IsDisabledUp = _conditionsData.IsDisabledConditionUp();
+        _uiRoot.IsDisabledDown = _conditionsData.IsDisabledConditionDown();
+        _uiRoot.IsDisabledLeft = _conditionsData.IsDisabledConditionLeft();
+        _uiRoot.IsDisabledRight = _conditionsData.IsDisabledConditionRight();
+        _uiRoot.IsDisabledZoomPlus = _conditionsData.IsDisabledConditionZoomPlus();
+        _uiRoot.IsDisabledZoomMinus = _conditionsData.IsDisabledConditionZoomMinus();
+    }
+
     private void OnDisable()
     {
         _inputSceneTool.Disable();
@@ -173,6 +222,7 @@ public class SceneToolv2Editor : Editor
     }
 
     private SerializedProperty _sceneToolEvents;
+    private SerializedProperty _conditionsData;
     private SerializedProperty _audioMixerData;
 
     private ButtonSceneToolType _activeButton;
@@ -233,6 +283,7 @@ public class SceneToolv2Editor : Editor
         _actionNames = actionNames.ToArray();
 
         _sceneToolEvents = serializedObject.FindProperty("_sceneToolEvents");
+        _conditionsData = serializedObject.FindProperty("_conditionsData");
         _audioMixerData = serializedObject.FindProperty("_audioMixerData");
 
         #region InitTextureForEditor
@@ -359,24 +410,30 @@ public class SceneToolv2Editor : Editor
                 break;
             case ButtonSceneToolType.Up:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("holdUp"));
+                OptionCondition(_conditionsData.FindPropertyRelative("up"));
                 break;
             case ButtonSceneToolType.Down:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("holdDown"));
+                OptionCondition(_conditionsData.FindPropertyRelative("down"));
                 break;
             case ButtonSceneToolType.Left:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("holdLeft"));
+                OptionCondition(_conditionsData.FindPropertyRelative("left"));
                 break;
             case ButtonSceneToolType.Right:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("holdRight"));
+                OptionCondition(_conditionsData.FindPropertyRelative("right"));
                 break;
             case ButtonSceneToolType.Return:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("clickReturn"));
                 break;
             case ButtonSceneToolType.Minus:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("holdZoomMinus"));
+                OptionCondition(_conditionsData.FindPropertyRelative("zoomMinus"));
                 break;
             case ButtonSceneToolType.Plus:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("holdZoomPlus"));
+                OptionCondition(_conditionsData.FindPropertyRelative("zoomPlus"));
                 break;
             case ButtonSceneToolType.Sound:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("clickSound"));
@@ -392,9 +449,12 @@ public class SceneToolv2Editor : Editor
     {
         EditorGUILayout.PropertyField(btnEvent);
         EditorGUILayout.Space();
+    }
 
+    private void OptionCondition(SerializedProperty btnConditions)
+    {
         EditorGUILayout.Space();
-        //ShowConditionDisabled(button);
+        ShowConditionDisabled(btnConditions);
     }
 
     private void OptionsScenes(SerializedProperty listScene)
@@ -513,11 +573,8 @@ public class SceneToolv2Editor : Editor
         }
     }
 
-    private void ShowConditionDisabled(SerializedProperty button)
+    private void ShowConditionDisabled(SerializedProperty conditions)
     {
-        var serializedObjectButton = new SerializedObject(button.objectReferenceValue);
-        var conditions = serializedObjectButton.FindProperty("disabledConditions");
-
         for (var j = 0; j < conditions.arraySize; j++)
         {
             var condition = conditions.GetArrayElementAtIndex(j);
@@ -570,8 +627,6 @@ public class SceneToolv2Editor : Editor
         {
             conditions.arraySize++;
         }
-
-        serializedObjectButton.ApplyModifiedProperties();
     }
 
     private string[] GetNamesFromComponents(Component[] array)
@@ -640,6 +695,7 @@ public class SceneToolv2Editor : Editor
                 _actionNames)];
 
         EditorGUILayout.Space();
+        
         if (GUILayout.Button("Open Input Actions"))
         {
             AssetDatabase.OpenAsset(FindObjectOfType<InputSceneToolInstaller>().inputActionAsset);

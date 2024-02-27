@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace UISceneTool.Scripts
 {
-    public class MouseScrollManipulation : PointerManipulator
+    public class MouseScrollManipulator : PointerManipulator
     {
         private Action<float> _onClickAction;
 
-        public MouseScrollManipulation(Action<float> onClickAction)
+        public MouseScrollManipulator(Action<float> onClickAction)
         {
             _onClickAction = onClickAction;
         }

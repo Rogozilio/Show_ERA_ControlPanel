@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace UISceneTool.Scripts
 {
-    public class MouseHoverManipulation : PointerManipulator
+    public class MouseHoverManipulator : PointerManipulator
     {
         private bool _isPointerLeave;
         

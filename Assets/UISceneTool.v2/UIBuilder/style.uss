@@ -280,3 +280,7 @@
     -unity-background-image-tint-color: rgb(255, 255, 255);
     color: rgb(225, 227, 230);
 }
+
+.disabled {
+    opacity: 0.1;
+}

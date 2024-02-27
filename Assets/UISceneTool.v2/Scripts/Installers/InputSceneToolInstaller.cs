@@ -8,7 +8,7 @@ using Zenject;
 public class InputSceneToolInstaller : MonoInstaller
 {
     public InputActionAsset inputActionAsset;
-    public List<string> actionNames = new List<string>();
+    [HideInInspector] public List<string> actionNames = new List<string>();
     public override void InstallBindings()
     {
         Container.Bind<InputSceneTool>().AsSingle().WithArguments(inputActionAsset, actionNames);
