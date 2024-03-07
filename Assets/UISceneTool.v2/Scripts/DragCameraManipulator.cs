@@ -1,25 +1,127 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class DragCameraManipulator : PointerManipulator
 {
-    public bool isStaticOffsetTop;
-    public bool isStaticOffsetBottom;
-    public bool isStaticOffsetLeft;
-    public bool isStaticOffsetRight;
+    public struct ObstacleData
+    {
+        public RectTransform Transform;
+        private Vector2 _size => Transform.rect.size * Transform.lossyScale;
+
+        public Vector2 TopLeft => new Vector2(Transform.position.x + _size.x * (-Transform.pivot.x),
+            Transform.position.y + _size.y * (1f - Transform.pivot.y));
+
+        public Vector2 TopCenter => new Vector2(Transform.position.x + _size.x * (0.5f - Transform.pivot.x),
+            Transform.position.y + _size.y * (1f - Transform.pivot.y));
+
+        public Vector2 TopRight => new Vector2(Transform.position.x + _size.x * (1f - Transform.pivot.x),
+            Transform.position.y + _size.y * (1f - Transform.pivot.y));
+
+        public Vector2 MiddleLeft => new Vector2(Transform.position.x + _size.x * (-Transform.pivot.x),
+            Transform.position.y + _size.y * (0.5f - Transform.pivot.y));
+
+        public Vector2 MiddleCenter => new Vector2(Transform.position.x + _size.x * (0.5f - Transform.pivot.x),
+            Transform.position.y + _size.y * (0.5f - Transform.pivot.y));
+
+        public Vector2 MiddleRight => new Vector2(Transform.position.x + _size.x * (1f - Transform.pivot.x),
+            Transform.position.y + _size.y * (0.5f - Transform.pivot.y));
+
+        public Vector2 BottomLeft => new Vector2(Transform.position.x + _size.x * (-Transform.pivot.x),
+            Transform.position.y + _size.y * (-Transform.pivot.y));
+
+        public Vector2 BottomCenter => new Vector2(Transform.position.x + _size.x * (0.5f - Transform.pivot.x),
+            Transform.position.y + _size.y * (-Transform.pivot.y));
+
+        public Vector2 BottomRight => new Vector2(Transform.position.x + _size.x * (1f - Transform.pivot.x),
+            Transform.position.y + _size.y * (-Transform.pivot.y));
+
+        public ObstacleData(RectTransform transform)
+        {
+            Transform = transform;
+        }
+    }
+
+    public struct TargetData
+    {
+        public VisualElement Window;
+        public VisualElement Camera;
+
+        public float multiplyResolution;
+        private Vector3 _mousePosition;
+        private Vector2 _sizeWindow;
+        private Vector2 _sizeLayout;
+        private Vector2 _halfSizeWindow;
+        public Vector2 offset;
+
+        public Vector2 Position =>
+            new Vector2(Window.transform.position.x,
+                _sizeLayout.y - Window.resolvedStyle.height - Window.transform.position.y) * multiplyResolution;
+
+        public Vector2 SizeWindow => _sizeWindow;
+        public Vector2 SizeLayout => _sizeLayout;
+        public Vector2 CenterWindow => Position + _halfSizeWindow;
+        public Vector2 CenterLeftWindow => new Vector2(CenterWindow.x - _halfSizeWindow.x, CenterWindow.y);
+        public Vector2 CenterRightWindow => new Vector2(CenterWindow.x + _halfSizeWindow.x, CenterWindow.y);
+        public Vector2 CenterTopWindow => new Vector2(CenterWindow.x, CenterWindow.y + _halfSizeWindow.y);
+        public Vector2 CenterBottomWindow => new Vector2(CenterWindow.x, CenterWindow.y - _halfSizeWindow.y);
+
+        public Vector2 TopLeftWindow =>
+            new Vector2(CenterWindow.x - _halfSizeWindow.x, CenterWindow.y + _halfSizeWindow.y);
+
+        public Vector2 TopRightWindow =>
+            new Vector2(CenterWindow.x + _halfSizeWindow.x, CenterWindow.y + _halfSizeWindow.y);
+
+        public Vector2 BottomLeftWindow =>
+            new Vector2(CenterWindow.x - _halfSizeWindow.x, CenterWindow.y - _halfSizeWindow.y);
+
+        public Vector2 BottomRightWindow =>
+            new Vector2(CenterWindow.x + _halfSizeWindow.x, CenterWindow.y - _halfSizeWindow.y);
+
+        public TargetData(VisualElement target, Vector3 mousePosition)
+        {
+            Camera = target;
+            Window = target.parent.parent;
+            _mousePosition = mousePosition;
+            multiplyResolution = Screen.width / 1920f;
+            _sizeWindow = Window.worldBound.size * multiplyResolution;
+            _halfSizeWindow = _sizeWindow / 2f;
+            _sizeLayout = new Vector2(Window.parent.resolvedStyle.width, Window.parent.resolvedStyle.height);
+            offset = Window.transform.position - _mousePosition;
+        }
+
+        public Vector2 ClosestCorner(Vector2 obstacleCenter)
+        {
+            var fromCenterToCenter = obstacleCenter - CenterWindow;
+            var corners = new List<Vector2>();
+            corners.Add(TopLeftWindow - CenterWindow);
+            corners.Add(CenterTopWindow - CenterWindow);
+            corners.Add(TopRightWindow - CenterWindow);
+            corners.Add(CenterLeftWindow - CenterWindow);
+            corners.Add(CenterRightWindow - CenterWindow);
+            corners.Add(BottomLeftWindow - CenterWindow);
+            corners.Add(CenterBottomWindow - CenterWindow);
+            corners.Add(BottomRightWindow - CenterWindow);
+
+            Vector2 result = default;
+            var prevDot = 0f;
+            foreach (var corner in corners)
+            {
+                var dot = Vector2.Dot(fromCenterToCenter.normalized, corner.normalized);
+                if (dot > prevDot)
+                {
+                    prevDot = dot;
+                    result = corner + CenterWindow;
+                }
+            }
+
+            return result;
+        }
+    }
 
     private Vector2 _directionMove;
     private Vector2 _offset;
-    private Vector2 _centerLeft;
-    private Vector2 _centerRight;
-    private Vector2 _centerTop;
-    private Vector2 _centerBottom;
-    private Vector2 _sizeWindow;
-
-    private Vector2 _center;
-    private Vector2 _halfSize;
 
     private float _offsetTop;
     private float _offsetBottom;
@@ -33,7 +135,23 @@ public class DragCameraManipulator : PointerManipulator
     private Action _onUp;
     private Action _onUpWithoutDrag;
 
-    public DragCameraManipulator(Action onDown = null, Action onDrag = null, Action onUp = null, Action onUpWithoutDrag = null)
+    private TargetData _target;
+    private List<RectTransform> _obstacles = new List<RectTransform>();
+    private List<ObstacleData> _obstacleDatas = new List<ObstacleData>();
+
+    public List<RectTransform> SetObstacle
+    {
+        set
+        {
+            foreach (var obstacle in value)
+            {
+                _obstacleDatas.Add(new ObstacleData(obstacle));
+            }
+        }
+    }
+
+    public DragCameraManipulator(Action onDown = null, Action onDrag = null, Action onUp = null,
+        Action onUpWithoutDrag = null)
     {
         _onDown = onDown;
         _onDrag = onDrag;
@@ -50,7 +168,7 @@ public class DragCameraManipulator : PointerManipulator
 
     protected override void UnregisterCallbacksFromTarget()
     {
-        target.UnregisterCallback<PointerDownEvent>(OnPointerDown);
+        target.UnregisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
         target.UnregisterCallback<PointerUpEvent>(OnPointerUp);
         target.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
     }
@@ -60,7 +178,7 @@ public class DragCameraManipulator : PointerManipulator
     private void OnPointerDown(PointerDownEvent evt)
     {
         _onDown?.Invoke();
-        offsetStartPosition = (Vector3)target.worldBound.position - evt.position;
+        _target = new TargetData(target, evt.position);
     }
 
     private void OnPointerMove(PointerMoveEvent evt)
@@ -69,18 +187,14 @@ public class DragCameraManipulator : PointerManipulator
         {
             _isDrag = true;
             _onDrag?.Invoke();
-            
-            Vector3 pointerDelta = evt.position - (Vector3)target.worldBound.position + offsetStartPosition;
 
-            var window = target.parent.parent;
-            var root = window.parent;
+            _target.Window.transform.position = Calculate(evt.position);
+            _target.Window.transform.position = new Vector2(
+                Mathf.Clamp(_target.Window.transform.position.x, 0,
+                    _target.SizeLayout.x - _target.Window.resolvedStyle.width),
+                Mathf.Clamp(_target.Window.transform.position.y, 0,
+                    _target.SizeLayout.y - _target.Window.resolvedStyle.height));
 
-            window.transform.position = new Vector2(
-                Mathf.Clamp(window.transform.position.x + pointerDelta.x, 0,
-                    root.resolvedStyle.width - window.resolvedStyle.width),
-                Mathf.Clamp(window.transform.position.y + pointerDelta.y, 0,
-                    root.resolvedStyle.height - window.resolvedStyle.height));
-            
             ShowOrHideEdgeWindow();
         }
     }
@@ -105,167 +219,64 @@ public class DragCameraManipulator : PointerManipulator
         }
     }
 
-    public Vector3 Calculate(Vector3 windowPosition, Vector3 mousePosition, Vector3 deltaPosition)
+    public Vector3 Calculate(Vector3 mousePosition)
     {
-        _directionMove = deltaPosition;
+        var nextXPosition = mousePosition.x  + _target.offset.x;
+        var nextYPosition = mousePosition.y + _target.offset.y;
+        GizmoDrawer.Instance.ClearDrawLine();
+        foreach (var obstacle in _obstacleDatas)
+        {
+            GizmoDrawer.Instance.AddDrawLine(_target.CenterTopWindow, _target.CenterBottomWindow, Color.green);
+            GizmoDrawer.Instance.AddDrawLine(_target.CenterLeftWindow, _target.CenterRightWindow, Color.green);
+            GizmoDrawer.Instance.AddDrawLine(obstacle.MiddleCenter, _target.ClosestCorner(obstacle.MiddleCenter),
+                Color.green);
+            GizmoDrawer.Instance.AddDrawLine(obstacle.BottomLeft, obstacle.BottomRight, Color.red);
+            GizmoDrawer.Instance.AddDrawLine(obstacle.TopLeft, obstacle.TopRight, Color.blue);
 
-        _halfSize = HalfSize(_sizeWindow);
-        _center = Center(mousePosition, _sizeWindow);
-        RefreshOffset(windowPosition, mousePosition);
-        //RefreshOffsetValue();
-        _centerTop = new Vector2(_center.x, _center.y + _halfSize.y /* + offsetTop*/);
-        _centerBottom = new Vector2(_center.x, _center.y - _halfSize.y /* + offsetBottom*/);
-        _centerLeft = new Vector2(_center.x - _halfSize.x /* + offsetLeft*/, _center.y);
-        _centerRight = new Vector2(_center.x + _halfSize.x /* + offsetRight*/, _center.y);
 
-        var nextXPosition = float.NaN;
-        var nextYPosition = float.NaN;
+            if (IsLineIntersection(obstacle.TopLeft, obstacle.BottomLeft, obstacle.MiddleCenter,
+                    _target.ClosestCorner(obstacle.MiddleCenter)))
+            {
+                nextXPosition = Mathf.Clamp(nextXPosition, 0,
+                    (obstacle.TopLeft.x - _target.SizeWindow.x) / _target.multiplyResolution);
+                Debug.Log("Left");
+                Debug.Log("X " + nextXPosition + " Next " +
+                          (obstacle.TopLeft.x - _target.SizeWindow.x));
+                continue;
+            }
 
-        // foreach (var obstacle in obstacles)
-        // {
-        //     var topRight = Center(obstacle) + new Vector2(HalfSize(obstacle).x, HalfSize(obstacle).y);
-        //     var bottomRight = Center(obstacle) +
-        //                       new Vector2(HalfSize(obstacle).x, -HalfSize(obstacle).y);
-        //     var topLeft = Center(obstacle) + new Vector2(-HalfSize(obstacle).x, HalfSize(obstacle).y);
-        //     var bottomLeft = Center(obstacle) +
-        //                      new Vector2(-HalfSize(obstacle).x, -HalfSize(obstacle).y);
-        //
-        //     if (LeftCollision(obstacle) && IsLineIntersection(topRight, bottomRight, Center(obstacle), _getCenter))
-        //     {
-        //         nextXPosition = Center(obstacle).x + HalfSize(obstacle).x + _getHalfSize.x;// - offsetLeft;
-        //         continue;
-        //     }
-        //
-        //     if (RightCollision(obstacle) && IsLineIntersection(topLeft, bottomLeft, Center(obstacle), _getCenter))
-        //     {
-        //         nextXPosition = Center(obstacle).x - HalfSize(obstacle).x - _getHalfSize.x;// - offsetRight;
-        //         continue;
-        //     }
-        //
-        //     if (TopCollision(obstacle) && IsLineIntersection(bottomLeft, bottomRight, Center(obstacle), _getCenter))
-        //     {
-        //         nextYPosition = Center(obstacle).y - HalfSize(obstacle).y - _getHalfSize.y;// - offsetTop;
-        //         continue;
-        //     }
-        //
-        //     if (BottomCollision(obstacle) && IsLineIntersection(topLeft, topRight, Center(obstacle), _getCenter))
-        //     {
-        //         nextYPosition = Center(obstacle).y + HalfSize(obstacle).y + _getHalfSize.y;// - offsetBottom;
-        //         continue;
-        //     }
-        // }
+            if (IsLineIntersection(obstacle.TopRight, obstacle.BottomRight,
+                    obstacle.MiddleCenter, _target.ClosestCorner(obstacle.MiddleCenter)))
+            {
+                nextXPosition = Mathf.Clamp(nextXPosition, obstacle.TopRight.x / _target.multiplyResolution,
+                    nextXPosition);
+                Debug.Log("Right");
+                continue;
+            }
 
-        nextXPosition = CheckXInsideScreen(nextXPosition);
-        nextYPosition = CheckYInsideScreen(nextYPosition);
+            if (IsLineIntersection(obstacle.BottomLeft, obstacle.BottomRight,
+                    obstacle.MiddleCenter, _target.ClosestCorner(obstacle.MiddleCenter)))
+            {
+                nextYPosition = Mathf.Clamp(nextYPosition, _target.SizeLayout.y - obstacle.BottomLeft.y / _target.multiplyResolution,
+                    nextYPosition);
+                Debug.Log("Top");
+               
+                continue;
+            }
 
-        Debug.Log(nextXPosition);
+            if (IsLineIntersection(obstacle.TopLeft, obstacle.TopRight, obstacle.MiddleCenter,
+                    _target.ClosestCorner(obstacle.MiddleCenter)))
+            {
+                nextYPosition = Mathf.Clamp(nextYPosition, nextYPosition,
+                    _target.SizeLayout.y + (- obstacle.TopRight.y - _target.SizeWindow.y ) /  _target.multiplyResolution);
+                Debug.Log("Bottom");
+                Debug.Log("Y " + nextYPosition + " Next " + (obstacle.TopLeft.y));
+                continue;
+            }
+        }
 
-        return new Vector3(
-            float.IsNaN(nextXPosition)
-                ? CheckXInsideScreen(mousePosition.x /* - _directionMove.x*/)
-                : nextXPosition,
-            float.IsNaN(nextYPosition)
-                ? CheckYInsideScreen(mousePosition.y /* - _directionMove.y*/)
-                : nextYPosition);
+        return new Vector3(nextXPosition, nextYPosition);
     }
-
-    private Vector2 Center(Vector3 position, Vector2 size)
-    {
-        return new Vector2(position.x + size.x * 0.5f, position.y + size.y * 0.5f);
-    }
-
-    private Vector2 HalfSize(Vector2 size)
-    {
-        return new Vector2(size.x / 2f, size.y / 2f);
-    }
-
-    private void RefreshOffset(Vector3 windowPosition, Vector3 mousePosition)
-    {
-        _offsetLeft = mousePosition.x - windowPosition.x;
-        _offsetRight = _sizeWindow.x - _offsetLeft;
-        _offsetBottom = mousePosition.y - windowPosition.y;
-        _offsetTop = _sizeWindow.y - _offsetBottom;
-        Debug.Log(_offsetLeft);
-    }
-
-    private float CheckXInsideScreen(float posX)
-    {
-        var minX = 0; //_offsetLeft;
-        var maxX = Screen.width; // - _offsetRight;
-
-        return Mathf.Clamp(posX, minX, maxX);
-    }
-
-    private float CheckYInsideScreen(float posY)
-    {
-        var minY = 0; //_offsetBottom;
-        var maxY = Screen.height; // - _offsetTop;
-
-        return Mathf.Clamp(posY, minY, maxY);
-    }
-
-    private bool IsInsideObstacle(Vector2 point, RectTransform obstacle)
-    {
-        var xMin = obstacle.position.x - obstacle.rect.width * obstacle.pivot.x;
-        var yMin = obstacle.position.y - obstacle.rect.height * obstacle.pivot.y;
-        var xMax = xMin + obstacle.rect.width;
-        var yMax = yMin + obstacle.rect.height;
-        return point.x - _directionMove.normalized.x > xMin && point.x - _directionMove.normalized.x < xMax &&
-               point.y - _directionMove.normalized.y > yMin && point.y - _directionMove.normalized.y < yMax;
-    }
-
-    private bool LeftCollision(RectTransform obstacle)
-    {
-        var leftTop = _centerLeft + new Vector2(0, _halfSize.y);
-        var leftDown = _centerLeft - new Vector2(0, _halfSize.y);
-
-        return IsInsideObstacle(leftTop, obstacle)
-               || IsInsideObstacle(_centerLeft, obstacle)
-               || IsInsideObstacle(leftDown, obstacle);
-    }
-
-    private bool RightCollision(RectTransform obstacle)
-    {
-        var rightTop = _centerRight + new Vector2(0, _halfSize.y);
-        var rightDown = _centerRight - new Vector2(0, _halfSize.y);
-
-        return IsInsideObstacle(rightTop, obstacle)
-               || IsInsideObstacle(_centerRight, obstacle)
-               || IsInsideObstacle(rightDown, obstacle);
-    }
-
-    private bool TopCollision(RectTransform obstacle)
-    {
-        var topLeft = _centerTop - new Vector2(_halfSize.x, 0);
-        var topRight = _centerTop + new Vector2(_halfSize.x, 0);
-
-        return IsInsideObstacle(topLeft, obstacle)
-               || IsInsideObstacle(_centerTop, obstacle)
-               || IsInsideObstacle(topRight, obstacle);
-    }
-
-    private bool BottomCollision(RectTransform obstacle)
-    {
-        var bottomLeft = _centerBottom - new Vector2(_halfSize.x, 0);
-        var bottomRight = _centerBottom + new Vector2(_halfSize.x, 0);
-
-        return IsInsideObstacle(bottomLeft, obstacle)
-               || IsInsideObstacle(_centerBottom, obstacle)
-               || IsInsideObstacle(bottomRight, obstacle);
-    }
-
-    // private void RefreshOffsetValue()
-    // {
-    //     if (!isStaticOffsetTop)
-    //         offsetTop = offsetRectTransform.offsetMax.y;
-    //     if (!isStaticOffsetBottom)
-    //         offsetBottom = offsetRectTransform.offsetMin.y;
-    //     if (!isStaticOffsetLeft)
-    //         offsetLeft = offsetRectTransform.offsetMin.x;
-    //     if (!isStaticOffsetRight)
-    //         offsetRight = offsetRectTransform.offsetMax.x;
-    // }
-
     private bool IsLineIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
     {
         Vector2 a = p2 - p1;

@@ -80,13 +80,16 @@ public class SceneToolv2 : MonoBehaviour
     [SerializeField] private SceneToolEvents _sceneToolEvents;
     [SerializeField] private ConditionsData _conditionsData;
     [SerializeField] private AudioMixerData _audioMixerData;
+    [SerializeField] private List<RectTransform> _obstacles;
 
     private byte _indexActiveScene;
 
     private void Awake()
     {
+        _uiRoot.SetObstacles = _obstacles;
+        
         _uiRoot.AddScenes(_sceneToolEvents.clickScene);
-
+        
         _inputSceneTool.EventsHoldUp(
             (ctx) => _uiRoot.upResizeButton.OnPointerDown(null),
             (ctx) => _sceneToolEvents.holdUp?.Invoke(),
@@ -224,6 +227,7 @@ public class SceneToolv2Editor : Editor
     private SerializedProperty _sceneToolEvents;
     private SerializedProperty _conditionsData;
     private SerializedProperty _audioMixerData;
+    private SerializedProperty _obstacles;
 
     private ButtonSceneToolType _activeButton;
 
@@ -285,6 +289,7 @@ public class SceneToolv2Editor : Editor
         _sceneToolEvents = serializedObject.FindProperty("_sceneToolEvents");
         _conditionsData = serializedObject.FindProperty("_conditionsData");
         _audioMixerData = serializedObject.FindProperty("_audioMixerData");
+        _obstacles = serializedObject.FindProperty("_obstacles");
 
         #region InitTextureForEditor
 
@@ -406,7 +411,7 @@ public class SceneToolv2Editor : Editor
         {
             case ButtonSceneToolType.Camera:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("clickCamera"));
-                //DrawOptionsObstacles(_dragUI);
+                DrawOptionsObstacles(_obstacles);
                 break;
             case ButtonSceneToolType.Up:
                 OptionButton(_sceneToolEvents.FindPropertyRelative("holdUp"));
@@ -481,31 +486,18 @@ public class SceneToolv2Editor : Editor
         EditorGUILayout.EndHorizontal();
     }
 
-    private void DrawOptionsObstacles(SerializedProperty buttonMove)
+    private void DrawOptionsObstacles(SerializedProperty obstacles)
     {
         EditorGUILayout.Space();
-        EditorGUILayout.PropertyField(buttonMove);
-        EditorGUILayout.Space();
-        if (!buttonMove.objectReferenceValue)
-        {
-            EditorGUILayout.HelpBox(
-                buttonMove.name + " no assigned. Please, move object with component DragUI to field above.",
-                MessageType.Warning);
-            return;
-        }
-
-        var objectRef = new SerializedObject(buttonMove.objectReferenceValue);
-        var listProperty = objectRef.FindProperty("obstacles");
-        var lenghtList = listProperty.arraySize;
         EditorGUILayout.LabelField("List Obstacles: ");
-        for (var i = 0; i < lenghtList; i++)
+        for (var i = 0; i < obstacles.arraySize; i++)
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(listProperty.GetArrayElementAtIndex(i), GUIContent.none);
+            EditorGUILayout.PropertyField(obstacles.GetArrayElementAtIndex(i), GUIContent.none);
             if (GUILayout.Button("Remove", GUILayout.Width(80f)))
             {
-                listProperty.DeleteArrayElementAtIndex(i);
+                obstacles.DeleteArrayElementAtIndex(i);
                 break;
             }
 
@@ -517,11 +509,10 @@ public class SceneToolv2Editor : Editor
         GUILayout.Space(15);
         if (GUILayout.Button("Add Obstacle"))
         {
-            listProperty.InsertArrayElementAtIndex(lenghtList);
+            obstacles.InsertArrayElementAtIndex(obstacles.arraySize);
         }
 
         EditorGUILayout.EndHorizontal();
-        objectRef.ApplyModifiedProperties();
     }
 
     private void DrawOptionAudioMixer(SerializedProperty audioMixerData)

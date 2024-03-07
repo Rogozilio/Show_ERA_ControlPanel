@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UISceneTool.Scripts;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
@@ -70,18 +71,6 @@ public class UIRootSceneTool
     private UIButtonSceneTool _sound;
     private VisualElement _scenes;
 
-    private bool EnableUpResizeButton
-    {
-        set
-        {
-            if (value)
-                _zoomPlus.Background.AddManipulator(zoomPlusResizeButton);
-            else
-                _zoomPlus.Background.RemoveManipulator(zoomPlusResizeButton);
-        }
-    }
-
-
     #region InitManipulators
 
     public ResizeButtonManipulator upResizeButton = new ResizeButtonManipulator();
@@ -123,6 +112,11 @@ public class UIRootSceneTool
     public bool IsDisabledZoomPlus{ set => _zoomPlus.IsDisabled = value; }
 
     public bool IsDisabledZoomMinus{ set => _zoomMinus.IsDisabled = value; }
+
+    public List<RectTransform> SetObstacles
+    {
+        set => _dragCameraManipulator.SetObstacle = value;
+    }
 
     public UIRootSceneTool(UIDocument uiDocument)
     {

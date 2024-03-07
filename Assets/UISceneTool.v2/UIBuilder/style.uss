@@ -57,11 +57,12 @@
     background-color: rgba(0, 0, 0, 0);
     background-image: url('project://database/Assets/UISceneTool.v2/Sprites/Window.png?fileID=21300000&guid=806801b5cbd81434abde7494b3df7da2&type=3#Window');
     flex-direction: column;
-    width: 222px;
     padding-top: 5px;
     padding-right: 5px;
     padding-bottom: 5px;
-    padding-left: 5px;
+    padding-left: 7px;
+    -unity-slice-scale: 2px;
+    width: 221px;
 }
 
 #Window.WindowShow {
