@@ -134,6 +134,7 @@ public class SceneToolv2 : MonoBehaviour
             (ctx) =>
             {
                 _uiRoot.soundResizeButton.OnPointerUp(null);
+                _uiRoot.clickMouseManipulator.OnPointerDown(null);
                 _sceneToolEvents.clickSound?.Invoke();
             });
         _inputSceneTool.EventsClickScene(

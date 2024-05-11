@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UISceneTool.Scripts;
@@ -10,7 +11,7 @@ public class UIRootSceneTool
     public struct UIButtonSceneTool
     {
         public Button Background;
-        public VisualElement Foreground;
+        public VisualElement Frontground;
         public VisualElement Icon;
         public ResizeButtonManipulator ResizeButtonManipulator;
         public MouseHoverManipulator MouseHoverManipulator;
@@ -36,8 +37,8 @@ public class UIRootSceneTool
             MouseHoverManipulator mouseHoverManipulator)
         {
             Background = background;
-            Foreground = Background.Children().First();
-            Icon = Foreground.Children().First();
+            Frontground = Background.Children().First();
+            Icon = Frontground.Children().First();
             ResizeButtonManipulator = resizeButtonManipulator;
             MouseHoverManipulator = mouseHoverManipulator;
         }
@@ -47,12 +48,12 @@ public class UIRootSceneTool
             if (value)
             {
                 Background.AddManipulator(ResizeButtonManipulator);
-                Foreground.AddManipulator(MouseHoverManipulator);
+                Frontground.AddManipulator(MouseHoverManipulator);
             }
             else
             {
                 Background.RemoveManipulator(ResizeButtonManipulator);
-                Foreground.RemoveManipulator(MouseHoverManipulator);
+                Frontground.RemoveManipulator(MouseHoverManipulator);
             }
         }
     }
@@ -94,9 +95,10 @@ public class UIRootSceneTool
     public MouseHoverManipulator soundMouseHover = new MouseHoverManipulator();
     public MouseHoverManipulator cameraMouseHover = new MouseHoverManipulator();
 
-    public List<ClickSceneManipulation> scenesClickButton = new List<ClickSceneManipulation>();
+    public List<ClickSceneManipulator> scenesClickButton = new List<ClickSceneManipulator>();
 
     private MouseScrollManipulator _mouseScrollManipulator;
+    public ClickSoundManipulator clickMouseManipulator;
     private DragCameraManipulator _dragCameraManipulator;
 
     #endregion
@@ -135,6 +137,7 @@ public class UIRootSceneTool
         _scenes = _root.Q<VisualElement>("Scenes");
 
         _mouseScrollManipulator = new MouseScrollManipulator(null);
+        clickMouseManipulator = new ClickSoundManipulator(SwitchActivatedOrDeactivated);
         _dragCameraManipulator = new DragCameraManipulator(null, null, null, SwitchCameraElements);
 
         _zoomPlus.SwitchManipulators(true);
@@ -148,6 +151,7 @@ public class UIRootSceneTool
         _camera.SwitchManipulators(true);
 
         _sound.Background.AddManipulator(_mouseScrollManipulator);
+        _sound.Background.AddManipulator(clickMouseManipulator);
         _camera.Background.AddManipulator(_dragCameraManipulator);
     }
     
@@ -158,8 +162,8 @@ public class UIRootSceneTool
     {
         _camera.Background.ToggleInClassList("ColorWhite");
         _camera.Background.ToggleInClassList("ColorGreen");
-        _camera.Foreground.ToggleInClassList("ColorWhite");
-        _camera.Foreground.ToggleInClassList("ColorGreen");
+        _camera.Frontground.ToggleInClassList("ColorWhite");
+        _camera.Frontground.ToggleInClassList("ColorGreen");
         _camera.Icon.ToggleInClassList("ColorWhite");
         _camera.Icon.ToggleInClassList("ColorGreen");
     }
@@ -221,7 +225,7 @@ public class UIRootSceneTool
         scene.AddToClassList("Scene");
         scene.AddToClassList("ColorWhite");
         scene.name = "Scene" + index;
-        scenesClickButton.Add(new ClickSceneManipulation(() =>
+        scenesClickButton.Add(new ClickSceneManipulator(() =>
         {
             UnSelectScenes();
             SelectScene(scene);
@@ -284,22 +288,56 @@ public class UIRootSceneTool
 
     #region SoundUI
 
+    private float _soundBarValue
+    {
+        get => Mathf.Clamp(_root.Q<VisualElement>("SoundBar").transform.scale.x,0.05f, 1f);
+        set
+        {
+            var scaleBar = _root.Q<VisualElement>("SoundBar").transform.scale;
+            scaleBar.x = Mathf.Clamp(value, 0.05f, 1f);
+            _root.Q<VisualElement>("SoundBar").transform.scale = scaleBar;
+        }
+    }
     public void SoundDisabled()
     {
-        _root.Q<Button>("Sound").AddToClassList("SoundDisabledWhite");
-        _root.Q<VisualElement>("SoundForeground").AddToClassList("SoundDisabledGrey");
-        _root.Q<VisualElement>("SoundIcon").AddToClassList("SoundDisabledWhite");
-        _root.Q<VisualElement>("SoundBar").AddToClassList("SoundDisabledWhite");
-        _root.Q<Button>("Sound").RemoveManipulator(_mouseScrollManipulator);
+        _sound.Background.AddToClassList("ColorDisabledWhite");
+        _sound.Frontground.AddToClassList("ColorDisabledGrey");
+        _sound.Icon.AddToClassList("ColorDisabledWhite");
+        _root.Q<VisualElement>("SoundBar").AddToClassList("ColorDisabledWhite");
+        _sound.Background.RemoveManipulator(_mouseScrollManipulator);
+        _sound.Background.RemoveManipulator(clickMouseManipulator);
+        _sound.Background.RemoveManipulator(soundResizeButton);
+        _sound.Background.RemoveManipulator(soundMouseHover);
+        _soundBarValue = 0f;
     }
 
+    private void SwitchActivatedOrDeactivated()
+    {
+        if (_sound.Frontground.ClassListContains("ColorWhite"))
+        {
+            SoundDeactivated();
+        }
+        else
+        {
+            SoundActivated();
+        }
+    }
+    private void SoundActivated()
+    {
+        _sound.Frontground.AddToClassList("ColorWhite");
+        _sound.Icon.RemoveFromClassList("ColorWhite");
+        _root.Q<VisualElement>("SoundBar").RemoveFromClassList("ColorWhite");
+        _sound.Background.AddManipulator(_mouseScrollManipulator);
+        _soundBarValue = 1f;
+    }
+    
     private void SoundDeactivated()
     {
-        _root.Q<Button>("Sound").AddToClassList("SoundDisabledWhite");
-        _root.Q<VisualElement>("SoundForeground").AddToClassList("DeactivateForeground");
-        _root.Q<VisualElement>("SoundIcon").AddToClassList("SoundDisabledWhite");
-        _root.Q<VisualElement>("SoundBar").AddToClassList("SoundDisabledWhite");
-        _root.Q<Button>("Sound").RemoveManipulator(_mouseScrollManipulator);
+        _sound.Frontground.RemoveFromClassList("ColorWhite");
+        _sound.Icon.AddToClassList("ColorWhite");
+        _root.Q<VisualElement>("SoundBar").AddToClassList("ColorWhite");
+        _sound.Background.RemoveManipulator(_mouseScrollManipulator);
+        _soundBarValue = 0f;
     }
 
     #endregion

@@ -266,11 +266,11 @@
 }
 
 .ColorDisabledGrey {
-    -unity-background-image-tint-color: rgb(143, 150, 168);
+    -unity-background-image-tint-color: rgb(144, 146, 142);
 }
 
 .ColorDisabledWhite {
-    -unity-background-image-tint-color: rgb(213, 213, 213);
+    -unity-background-image-tint-color: rgb(197, 197, 197);
 }
 
 .ColorGreenHover {

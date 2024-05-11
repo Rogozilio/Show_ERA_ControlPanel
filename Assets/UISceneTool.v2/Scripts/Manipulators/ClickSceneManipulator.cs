@@ -5,14 +5,14 @@ using UnityEngine.UIElements;
 
 namespace UISceneTool.Scripts
 {
-    public class ClickSceneManipulation : PointerManipulator
+    public class ClickSceneManipulator : PointerManipulator
     {
         private bool _isLeavePointer;
         
         private Action _onClickAction;
         private UnityEvent _onClickEvent;
 
-        public ClickSceneManipulation(Action onClickAction, UnityEvent onClickEvent)
+        public ClickSceneManipulator(Action onClickAction, UnityEvent onClickEvent)
         {
             _onClickAction = onClickAction;
             _onClickEvent = onClickEvent;

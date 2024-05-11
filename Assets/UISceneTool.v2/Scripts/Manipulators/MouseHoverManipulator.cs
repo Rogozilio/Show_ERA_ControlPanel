@@ -10,6 +10,7 @@ namespace UISceneTool.Scripts
         protected override void RegisterCallbacksOnTarget()
         {
             target.parent.RegisterCallback<PointerUpEvent>(OnPointerUp);
+            target.parent.RegisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
             target.RegisterCallback<PointerEnterEvent>(OnPointerEnter);
             target.RegisterCallback<PointerLeaveEvent>(OnPointerLeave);
             
@@ -18,6 +19,7 @@ namespace UISceneTool.Scripts
         protected override void UnregisterCallbacksFromTarget()
         {
             target.parent.UnregisterCallback<PointerUpEvent>(OnPointerUp);
+            target.parent.UnregisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
             target.UnregisterCallback<PointerEnterEvent>(OnPointerEnter);
             target.UnregisterCallback<PointerLeaveEvent>(OnPointerLeave);
             
@@ -26,13 +28,19 @@ namespace UISceneTool.Scripts
         {
             _isPointerLeave = false;
             target.AddToClassList(
-                target.ClassListContains("ColorGreen") ? "ColorGreenHover" : "ColorWhiteHover");
+                target.ClassListContains("ColorWhite") ? "ColorWhiteHover" : "ColorGreenHover");
         } 
         private void OnPointerLeave(PointerLeaveEvent evt)
         {
             _isPointerLeave = true;
             target.RemoveFromClassList(
-                target.ClassListContains("ColorGreen") ? "ColorGreenHover" : "ColorWhiteHover");
+                target.ClassListContains("ColorWhite") ? "ColorWhiteHover" : "ColorGreenHover");
+        }
+
+        private void OnPointerDown(PointerDownEvent evt)
+        {
+            target.RemoveFromClassList("ColorGreenHover");
+            target.RemoveFromClassList("ColorWhiteHover");
         }
         private void OnPointerUp(PointerUpEvent evt)
         {
